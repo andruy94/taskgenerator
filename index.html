@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0014)about:internet -->
+<html lang="ru"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-store">
 <title>TaskBoard</title>
@@ -141,17 +141,14 @@ label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bott
   <!-- upload -->
   <div class="card" id="s-upload">
     <div class="ctitle">Шаг 1 — Загрузить фото</div>
-    <div class="uzone" id="uzone"
-      ondragover="event.preventDefault();this.classList.add('drag')"
-      ondragleave="this.classList.remove('drag')"
-      ondrop="handleDrop(event)">
+    <div class="uzone" id="uzone" ondragover="event.preventDefault();this.classList.add(&#39;drag&#39;)" ondragleave="this.classList.remove(&#39;drag&#39;)" ondrop="handleDrop(event)">
       <input type="file" accept="image/*" id="finput" onchange="handleFile(event)">
       <div class="uicon">📷</div>
       <div class="utitle">Перетащите фото или нажмите</div>
       <p>JPG, PNG, WEBP — учебник, тетрадь, распечатка</p>
     </div>
     <div id="imgarea" class="hidden">
-      <img id="imgprev" class="imgprev" src="" alt="">
+      <img id="imgprev" class="imgprev" src="https://api.aiaistudio.org/taskboard" alt="">
       <div class="field" style="margin-top:12px">
         <label>Тип задания</label>
         <select id="ttype">
@@ -855,5 +852,6 @@ window.addEventListener('load', async () => {
   routeHash();
 });
 </script>
-</body>
-</html>
+
+
+</body></html>
