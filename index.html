@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-store">
 <title>TaskBoard</title>
 <style>
 :root{--bg:#f7f6f2;--surface:#fff;--border:#e4e2db;--border2:#ccc9be;--ink:#1a1917;--ink2:#6b6860;--ink3:#a8a59e;--accent:#2563eb;--abg:#eff6ff;--green:#16a34a;--gbg:#f0fdf4;--gb:#bbf7d0;--red:#dc2626;--rbg:#fef2f2;--rb:#fecaca;--amber:#d97706;--ambg:#fffbeb;--r:10px;--rs:6px}
@@ -44,8 +45,8 @@ label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bott
 .bblue{background:var(--abg);color:var(--accent)}
 .bgreen2{background:var(--gbg);color:var(--green);border:1px solid var(--gb)}
 .bfull{background:var(--ambg);color:var(--amber)}
-.codebox{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:10px 14px;font-family:monospace;font-size:14px;flex-wrap:wrap}
-.codeval{font-weight:600;font-size:18px;letter-spacing:.05em;color:var(--accent);flex:1;word-break:break-all}
+.codebox{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:10px 14px;font-family:monospace;font-size:13px;flex-wrap:wrap}
+.codeval{font-weight:600;color:var(--accent);flex:1;word-break:break-all}
 .divider{border:none;border-top:1px solid var(--border);margin:16px 0}
 .alert{padding:12px 16px;border-radius:var(--rs);font-size:13px;line-height:1.5}
 .agreen{background:var(--gbg);color:#14532d;border:1px solid var(--gb)}
@@ -56,8 +57,6 @@ label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bott
 @keyframes spin{to{transform:rotate(360deg)}}
 .hidden{display:none!important}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
- 
-/* QUESTION EDITOR */
 .qcard{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:12px;background:var(--surface)}
 .qhead{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--border)}
 .qnum{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
@@ -73,20 +72,14 @@ label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bott
 .ansbox input[type=text]{border-color:var(--gb);font-size:13px;padding:6px 10px;background:#fff}
 .wbox{border:1px solid var(--border2);border-radius:var(--rs);padding:10px 12px;background:var(--abg)}
 .wbox label{font-size:12px;color:var(--accent);font-weight:500;margin-bottom:4px}
- 
-/* TASK LIST */
 .trow{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg);border-radius:var(--rs);border:1px solid var(--border);margin-bottom:8px}
 .trow:hover{background:#f0ede5}
 .tname{font-size:14px;font-weight:500;flex:1}
 .tmeta{font-size:12px;color:var(--ink3)}
- 
-/* STATS */
 .sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
 .scard{background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:14px;text-align:center}
 .snum{font-size:24px;font-weight:600}
 .slabel{font-size:11px;color:var(--ink3);margin-top:2px}
- 
-/* STUDENT */
 .qstud{background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:16px;margin-bottom:10px}
 .qnum2{font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;margin-bottom:6px}
 .qtext{font-size:15px;line-height:1.55;margin-bottom:12px}
@@ -124,18 +117,19 @@ label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bott
 </style>
 </head>
 <body>
- 
+
 <div class="keybar">
-  <span>🔑 Ключ aiaistudio.org:</span>
-  <input type="text" id="api-key" placeholder="Вставьте X-Client-Key" oninput="saveKey(this.value)">
-  <span style="color:var(--ink3);font-size:12px">Хранится в браузере</span>
+  <span>🔑 Ключ:</span>
+  <input type="text" id="api-key" placeholder="Вставьте X-Client-Key">
+  <button class="btn bsm bprimary" onclick="applyKey()">Сохранить</button>
+  <span id="key-status" style="font-size:12px"></span>
 </div>
 <div class="topbar">
   <div class="logo"><div class="logo-dot"></div>TaskBoard</div>
   <div id="tbr" style="display:flex;gap:8px"></div>
 </div>
-<div class="overlay hidden" id="overlay"><div class="spin bspin"></div><p id="ovmsg">Анализирую...</p></div>
- 
+<div class="overlay hidden" id="overlay"><div class="spin bspin"></div><p id="ovmsg">Загружаю...</p></div>
+
 <!-- ========== TEACHER ========== -->
 <div class="page active" id="page-teacher">
 <div class="container">
@@ -143,7 +137,7 @@ label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bott
     <div class="stitle">Кабинет учителя</div>
     <div class="ssub">Загрузите фото или создайте задание вручную</div>
   </div>
- 
+
   <!-- upload -->
   <div class="card" id="s-upload">
     <div class="ctitle">Шаг 1 — Загрузить фото</div>
@@ -159,9 +153,8 @@ label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bott
     <div id="imgarea" class="hidden">
       <img id="imgprev" class="imgprev" src="" alt="">
       <div class="field" style="margin-top:12px">
-        <label>Тип задания (подсказка AI)</label>
+        <label>Тип задания</label>
         <select id="ttype">
-          <option value="">Определить автоматически</option>
           <option value="fill_gaps">Заполни пропуски</option>
           <option value="multiple_choice">Множественный выбор</option>
           <option value="true_false">Верно / Неверно</option>
@@ -174,9 +167,7 @@ label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bott
         <input type="text" id="tctx" placeholder="5 класс, Present Perfect">
       </div>
       <div class="row">
-        <button class="btn bprimary" onclick="analyzeImage()">
-          <span class="spin hidden" id="sp-an"></span>Распознать задание
-        </button>
+        <button class="btn bprimary" onclick="analyzeImage()">Распознать задание</button>
         <button class="btn" onclick="resetUpload()">Другое фото</button>
         <button class="btn" onclick="openManual()">✏️ Создать вручную</button>
       </div>
@@ -185,7 +176,7 @@ label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bott
       <button class="btn" style="width:100%;justify-content:center" onclick="openManual()">✏️ Создать задание вручную (без фото)</button>
     </div>
   </div>
- 
+
   <!-- EDITOR -->
   <div class="card hidden" id="s-edit">
     <div class="ctitle">Редактор задания</div>
@@ -210,31 +201,30 @@ label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bott
     <div class="divider"></div>
     <div id="eerr" class="alert ared hidden" style="margin-bottom:12px"></div>
     <div class="row">
-      <button class="btn bgreen" onclick="publishTask()">Сохранить и получить ссылку →</button>
+      <button class="btn bgreen" onclick="publishTask()">Опубликовать и получить ссылку →</button>
       <button class="btn" onclick="resetUpload()">Сначала</button>
     </div>
   </div>
- 
+
   <!-- LINK -->
   <div class="card hidden" id="s-link">
     <div class="ctitle">Ссылка для ученика</div>
-    <div class="alert agreen" style="margin-bottom:16px">✓ Задание готово!</div>
+    <div class="alert agreen" style="margin-bottom:16px">✓ Задание опубликовано!</div>
     <div class="field">
-      <label>Ссылка</label>
+      <label>Ссылка (отправьте ученику)</label>
       <div class="codebox"><span class="codeval" id="surl"></span><button class="btn bsm" onclick="copyUrl()">Копировать</button></div>
     </div>
     <div class="field">
-      <label>Код</label>
-      <div class="codebox"><span class="codeval" id="scode"></span></div>
+      <label>ID задания</label>
+      <div class="codebox"><span class="codeval" id="scode" style="font-size:12px"></span></div>
     </div>
     <div class="divider"></div>
     <div class="row">
       <button class="btn bprimary" onclick="viewResults()">Результаты</button>
-      <button class="btn" onclick="editCurrent()">✏️ Редактировать</button>
       <button class="btn" onclick="newTask()">Новое задание</button>
     </div>
   </div>
- 
+
   <!-- RESULTS -->
   <div class="card hidden" id="s-results">
     <div class="ctitle">Результаты</div>
@@ -244,15 +234,14 @@ label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bott
     <div id="rbody" class="hidden">
       <div class="sgrid">
         <div class="scard"><div class="snum" id="st-t">0</div><div class="slabel">Учеников</div></div>
-        <div class="scard"><div class="snum" id="st-d">0</div><div class="slabel">Выполнили</div></div>
+        <div class="scard"><div class="snum" id="st-d">0</div><div class="slabel">Ответили</div></div>
         <div class="scard"><div class="snum" id="st-a">—</div><div class="slabel">Средний балл</div></div>
       </div>
       <div id="rtw"></div>
-      <div style="margin-top:10px"><button class="btn bsm bdanger" onclick="clearRes()">Очистить результаты</button></div>
     </div>
-    <div id="remp" class="alert ablue hidden">Пока нет результатов.</div>
+    <div id="remp" class="alert ablue hidden">Пока нет ответов.</div>
   </div>
- 
+
   <!-- TASK LIST -->
   <div class="card" id="tlist-card">
     <div class="ctitle">Все задания</div>
@@ -260,15 +249,15 @@ label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bott
   </div>
 </div>
 </div>
- 
+
 <!-- ========== STUDENT ========== -->
 <div class="page" id="page-student">
 <div class="container">
   <div class="card" id="st-enter">
     <div class="stitle" style="margin-bottom:6px">Открыть задание</div>
-    <div class="ssub">Введи код от учителя</div>
+    <div class="ssub">Вставьте ID задания от учителя</div>
     <div class="row" style="margin-bottom:12px">
-      <input type="text" id="cinput" placeholder="Код, напр. XK4P2" style="flex:1;text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+      <input type="text" id="cinput" placeholder="Вставьте ID задания" style="flex:1;font-size:12px;font-family:monospace">
       <button class="btn bprimary" onclick="openByCode()">Открыть</button>
     </div>
     <div id="cerr" class="alert ared hidden"></div>
@@ -295,444 +284,576 @@ label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bott
   </div>
 </div>
 </div>
- 
+
 <script>
-let tasks=JSON.parse(localStorage.getItem('tb_tasks')||'[]');
-let curCode=null,studTask=null,studAns={},eqArr=[];
- 
-function saveTasks(){localStorage.setItem('tb_tasks',JSON.stringify(tasks));}
-function getKey(){return document.getElementById('api-key').value.trim();}
-function saveKey(v){localStorage.setItem('tb_key',v);}
- 
-async function felixAI(prompt){
-  const key=getKey();
-  if(!key)throw new Error('Введите ключ в жёлтой строке сверху');
-  const fd=new FormData();fd.append('prompt',prompt);
-  const r=await fetch('https://api.aiaistudio.org/solve',{method:'POST',headers:{'X-Client-Key':key},body:fd});
-  if(!r.ok)throw new Error('Ошибка сервера: '+r.status);
-  const d=await r.json();if(d.error)throw new Error(d.error);
-  return d.answer||d.result||'';
+const API = 'https://api.aiaistudio.org';
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let curTaskId = null;
+let studTask = null;
+let studTaskId = null;
+let studAns = {};
+let eqArr = [];
+let dashboardTasks = [];
+
+// ── Storage helpers (localStorage + cookie fallback) ─────────────────────────
+function lsSet(k, v) {
+  try { localStorage.setItem(k, v); } catch(e) {}
+  document.cookie = k + '=' + encodeURIComponent(v) + ';max-age=31536000;path=/;SameSite=Lax';
 }
- 
-async function felixImg(prompt,b64,mime){
-  const key=getKey();
-  if(!key)throw new Error('Введите ключ в жёлтой строке сверху');
-  const fd=new FormData();fd.append('prompt',prompt);
-  const blob=await(await fetch('data:'+mime+';base64,'+b64)).blob();
-  fd.append('image',blob,'task.jpg');
-  const r=await fetch('https://api.aiaistudio.org/solve',{method:'POST',headers:{'X-Client-Key':key},body:fd});
-  if(!r.ok)throw new Error('Ошибка сервера: '+r.status);
-  const d=await r.json();if(d.error)throw new Error(d.error);
-  return d.answer||d.result||'';
+function lsGet(k) {
+  try { const v = localStorage.getItem(k); if (v) return v; } catch(e) {}
+  const m = document.cookie.match('(?:^|;)\\s*' + k + '=([^;]*)');
+  return m ? decodeURIComponent(m[1]) : null;
 }
- 
-function showPage(n){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+n).classList.add('active');
-  document.getElementById('tbr').innerHTML=n==='student'?'<button class="btn bsm" onclick="showPage(\'teacher\')">← Учитель</button>':'';
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+function getKey() { return document.getElementById('api-key').value.trim(); }
+
+async function applyKey() {
+  const key = document.getElementById('api-key').value.trim();
+  if (!key) { setKeyStatus('Введите ключ', false); return; }
+  lsSet('tb_key', key);
+  console.log('[TB] key saved, readback:', lsGet('tb_key') ? 'ok' : 'FAILED');
+  setKeyStatus('Сохранён ✓', true);
+  await loadDashboardTasks();
 }
- 
-function routeHash(){
-  const h=location.hash;
-  if(h.startsWith('#task/')){
-    const c=h.replace('#task/','').toUpperCase();
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.activeElement.id === 'api-key') applyKey();
+});
+
+function setKeyStatus(msg, ok) {
+  const el = document.getElementById('key-status');
+  el.textContent = msg;
+  el.style.color = ok ? 'var(--green)' : 'var(--red)';
+}
+
+// ── Pages ─────────────────────────────────────────────────────────────────────
+function showPage(n) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + n).classList.add('active');
+  document.getElementById('tbr').innerHTML = n === 'student'
+    ? '<button class="btn bsm" onclick="showPage(\'teacher\')">← Учитель</button>'
+    : '';
+  document.querySelector('.keybar').style.display = n === 'student' ? 'none' : '';
+}
+
+function routeHash() {
+  const h = location.hash;
+  if (h.startsWith('#task/')) {
+    const id = h.replace('#task/', '').trim();
     showPage('student');
-    document.getElementById('cinput').value=c;
+    document.getElementById('cinput').value = id;
     openByCode();
   }
 }
-window.addEventListener('hashchange',routeHash);
- 
-let upB64=null,upMime=null;
-function handleFile(e){const f=e.target.files[0];if(f)readImg(f);}
-function handleDrop(e){
-  e.preventDefault();document.getElementById('uzone').classList.remove('drag');
-  const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))readImg(f);
+window.addEventListener('hashchange', routeHash);
+
+// ── Upload ────────────────────────────────────────────────────────────────────
+let upFile = null;
+
+function handleFile(e) { const f = e.target.files[0]; if (f) readImg(f); }
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uzone').classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if (f && f.type.startsWith('image/')) readImg(f);
 }
-function readImg(file){
-  const r=new FileReader();
-  r.onload=ev=>{
-    const s=ev.target.result;upB64=s.split(',')[1];upMime=s.match(/data:([^;]+);/)[1];
-    document.getElementById('imgprev').src=s;
+function readImg(file) {
+  upFile = file;
+  const r = new FileReader();
+  r.onload = ev => {
+    document.getElementById('imgprev').src = ev.target.result;
     document.getElementById('imgarea').classList.remove('hidden');
-  };r.readAsDataURL(file);
+  };
+  r.readAsDataURL(file);
 }
- 
-async function analyzeImage(){
-  if(!upB64){alert('Загрузите фото');return;}
-  const tm={fill_gaps:'fill-in-the-gaps (blank=___)',multiple_choice:'multiple choice A/B/C/D',true_false:'true/false',order_words:'order words',open_answer:'open answer'};
-  const tp=document.getElementById('ttype').value,ctx=document.getElementById('tctx').value.trim();
-  showOv('Анализирую изображение...');
-  const prompt=`You are a teacher assistant. ${tp?'Task type: '+tm[tp]+'.':''} ${ctx?'Context: '+ctx+'.':''}
-Analyze this school exercise. Return ONLY valid JSON (no markdown):
-{"name":"task name","type":"fill_gaps|multiple_choice|true_false|order_words|open_answer","questions":[{"id":1,"text":"question (use ___ for blanks)","answer":"correct answer","options":["A","B","C","D"],"words":["w1","w2"]}]}
-Rules:
-- fill_gaps: ___ per blank, answer=correct word(s), comma-separated for multiple blanks
-- multiple_choice: options 3-4 items, answer=exact correct option text
-- true_false: answer="true" or "false"
-- order_words: words=shuffled array, answer=correct sentence
-- open_answer: answer=model answer
-Extract ALL questions. Use language of the task.`;
-  try{
-    let raw;
-    try{raw=await felixImg(prompt,upB64,upMime);}
-    catch(e){raw=await felixAI(prompt+'\n(Image unavailable, generate sample task)');}
-    const p=JSON.parse(raw.replace(/```json|```/g,'').trim());
-    loadEditor(p);
-  }catch(err){alert('Ошибка: '+err.message);}
-  finally{hideOv();}
+
+// ── Generate (stub, AI WIP) ───────────────────────────────────────────────────
+async function analyzeImage() {
+  const fd = new FormData();
+  fd.append('type', document.getElementById('ttype').value || 'fill_gaps');
+  const ctx = document.getElementById('tctx').value.trim();
+  if (ctx) fd.append('prompt', ctx);
+  if (upFile) fd.append('image', upFile);
+
+  showOv('Генерирую задание...');
+  try {
+    const res = await fetch(`${API}/api/v1/tasks/generate`, { method: 'POST', headers: { 'X-Client-Key': getKey() }, body: fd });
+    if (!res.ok) throw new Error('Ошибка сервера: ' + res.status);
+    const schema = await res.json();
+    loadEditor(schema);
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  } finally {
+    hideOv();
+  }
 }
- 
-function openManual(){
-  loadEditor({name:'',type:'fill_gaps',questions:[{id:1,text:'',answer:'',options:['','','',''],words:[]}]});
+
+function openManual() {
+  loadEditor({ name: '', type: 'fill_gaps', questions: [{ id: 1, text: '', answer: '', options: ['', '', '', ''], words: [] }] });
 }
- 
-function loadEditor(p){
-  document.getElementById('tname').value=p.name||'';
-  document.getElementById('etype').value=p.type||'fill_gaps';
-  eqArr=(p.questions||[]).map((q,i)=>({
-    id:i+1,text:q.text||'',answer:q.answer||'',
-    options:q.options&&q.options.length>=2?q.options:['','','',''],
-    words:q.words||[]
+
+// ── Editor ────────────────────────────────────────────────────────────────────
+function loadEditor(p) {
+  document.getElementById('tname').value = p.name || '';
+  document.getElementById('etype').value = p.type || 'fill_gaps';
+  eqArr = (p.questions || []).map((q, i) => ({
+    id: i + 1,
+    text: q.text || '',
+    answer: q.answer || '',
+    options: q.options && q.options.length >= 2 ? q.options : ['', '', '', ''],
+    words: q.words || []
   }));
   renderEditor();
   document.getElementById('s-edit').classList.remove('hidden');
-  document.getElementById('s-edit').scrollIntoView({behavior:'smooth'});
+  document.getElementById('s-edit').scrollIntoView({ behavior: 'smooth' });
 }
- 
-function getEType(){return document.getElementById('etype').value;}
- 
-function syncEditor(){
-  const tp=getEType();
-  eqArr.forEach((q,i)=>{
-    const b='q'+i;
-    const te=document.getElementById(b+'-t');if(te)q.text=te.value;
-    if(tp==='fill_gaps'||tp==='open_answer'||tp==='order_words'){
-      const ae=document.getElementById(b+'-a');if(ae)q.answer=ae.value;
+
+function getEType() { return document.getElementById('etype').value; }
+
+function syncEditor() {
+  const tp = getEType();
+  eqArr.forEach((q, i) => {
+    const b = 'q' + i;
+    const te = document.getElementById(b + '-t'); if (te) q.text = te.value;
+    if (tp === 'fill_gaps' || tp === 'open_answer' || tp === 'order_words') {
+      const ae = document.getElementById(b + '-a'); if (ae) q.answer = ae.value;
     }
-    if(tp==='multiple_choice'){
-      q.options=[];let j=0;
-      while(true){const e=document.getElementById(b+'-o'+j);if(!e)break;q.options.push(e.value);j++;}
-      document.querySelectorAll(`input[name="${b}-r"]`).forEach((r,ri)=>{if(r.checked)q.answer=q.options[ri]||'';});
+    if (tp === 'multiple_choice') {
+      q.options = []; let j = 0;
+      while (true) { const e = document.getElementById(b + '-o' + j); if (!e) break; q.options.push(e.value); j++; }
+      document.querySelectorAll(`input[name="${b}-r"]`).forEach((r, ri) => { if (r.checked) q.answer = q.options[ri] || ''; });
     }
-    if(tp==='true_false'){
-      document.querySelectorAll(`input[name="${b}-r"]`).forEach(r=>{if(r.checked)q.answer=r.value;});
+    if (tp === 'true_false') {
+      document.querySelectorAll(`input[name="${b}-r"]`).forEach(r => { if (r.checked) q.answer = r.value; });
     }
-    if(tp==='order_words'){
-      const we=document.getElementById(b+'-w');if(we)q.words=we.value.split(',').map(s=>s.trim()).filter(Boolean);
+    if (tp === 'order_words') {
+      const we = document.getElementById(b + '-w'); if (we) q.words = we.value.split(',').map(s => s.trim()).filter(Boolean);
     }
   });
 }
- 
-function rebuildEditor(){syncEditor();renderEditor();}
- 
-function renderEditor(){
-  const tp=getEType(),c=document.getElementById('qeditor');c.innerHTML='';
-  eqArr.forEach((q,i)=>{
-    const b='q'+i,div=document.createElement('div');div.className='qcard';div.dataset.i=i;
-    const tph=tp==='fill_gaps'?'She ___ (visit) Paris. Используйте ___ для пропусков':tp==='order_words'?'Описание (необязательно)':'Текст вопроса';
-    let body=`<div class="qf"><label>Текст вопроса</label><input type="text" id="${b}-t" value="${esc(q.text)}" placeholder="${tph}"></div>`;
- 
-    if(tp==='multiple_choice'){
-      const opts=q.options.length>=2?q.options:['','','',''];
-      body+=`<div class="qf"><label>Варианты <span style="color:var(--ink3);font-weight:400">(отметьте правильный)</span></label>`;
-      opts.forEach((o,oi)=>{
-        const ck=q.answer&&q.answer===o?'checked':'';
-        body+=`<div class="optrow"><input type="radio" name="${b}-r" value="${oi}" ${ck} title="Правильный"><input type="text" id="${b}-o${oi}" value="${esc(o)}" placeholder="Вариант ${oi+1}"><button class="btn bghost bsm" onclick="rmOpt(${i},${oi})">✕</button></div>`;
+
+function rebuildEditor() { syncEditor(); renderEditor(); }
+
+function renderEditor() {
+  const tp = getEType(), c = document.getElementById('qeditor'); c.innerHTML = '';
+  eqArr.forEach((q, i) => {
+    const b = 'q' + i, div = document.createElement('div');
+    div.className = 'qcard'; div.dataset.i = i;
+    const tph = tp === 'fill_gaps' ? 'She ___ (visit) Paris. Используйте ___ для пропусков' : tp === 'order_words' ? 'Описание (необязательно)' : 'Текст вопроса';
+    let body = `<div class="qf"><label>Текст вопроса</label><input type="text" id="${b}-t" value="${esc(q.text)}" placeholder="${tph}"></div>`;
+
+    if (tp === 'multiple_choice') {
+      const opts = q.options.length >= 2 ? q.options : ['', '', '', ''];
+      body += `<div class="qf"><label>Варианты <span style="color:var(--ink3);font-weight:400">(отметьте правильный)</span></label>`;
+      opts.forEach((o, oi) => {
+        const ck = q.answer && q.answer === o ? 'checked' : '';
+        body += `<div class="optrow"><input type="radio" name="${b}-r" value="${oi}" ${ck}><input type="text" id="${b}-o${oi}" value="${esc(o)}" placeholder="Вариант ${oi + 1}"><button class="btn bghost bsm" onclick="rmOpt(${i},${oi})">✕</button></div>`;
       });
-      body+=`<button class="btn bsm" style="margin-top:6px" onclick="addOpt(${i})">+ Вариант</button></div>`;
-    } else if(tp==='true_false'){
-      body+=`<div class="qf"><label>Правильный ответ</label>
-        <div class="optrow"><input type="radio" name="${b}-r" value="true" ${q.answer==='true'?'checked':''}><span style="font-size:14px;color:var(--green)">✓ Верно</span></div>
-        <div class="optrow"><input type="radio" name="${b}-r" value="false" ${q.answer==='false'?'checked':''}><span style="font-size:14px;color:var(--red)">✗ Неверно</span></div>
+      body += `<button class="btn bsm" style="margin-top:6px" onclick="addOpt(${i})">+ Вариант</button></div>`;
+    } else if (tp === 'true_false') {
+      body += `<div class="qf"><label>Правильный ответ</label>
+        <div class="optrow"><input type="radio" name="${b}-r" value="true" ${q.answer === 'true' ? 'checked' : ''}><span style="font-size:14px;color:var(--green)">✓ Верно</span></div>
+        <div class="optrow"><input type="radio" name="${b}-r" value="false" ${q.answer === 'false' ? 'checked' : ''}><span style="font-size:14px;color:var(--red)">✗ Неверно</span></div>
       </div>`;
-    } else if(tp==='order_words'){
-      body+=`<div class="qf wbox"><label>Слова для перестановки (через запятую)</label><input type="text" id="${b}-w" value="${esc((q.words||[]).join(', '))}" placeholder="He, has, visited, Paris"></div>`;
-      body+=`<div class="qf ansbox"><label>✓ Правильное предложение</label><input type="text" id="${b}-a" value="${esc(q.answer)}" placeholder="He has visited Paris"></div>`;
+    } else if (tp === 'order_words') {
+      body += `<div class="qf wbox"><label>Слова для перестановки (через запятую)</label><input type="text" id="${b}-w" value="${esc((q.words || []).join(', '))}" placeholder="He, has, visited, Paris"></div>`;
+      body += `<div class="qf ansbox"><label>✓ Правильное предложение</label><input type="text" id="${b}-a" value="${esc(q.answer)}" placeholder="He has visited Paris"></div>`;
     } else {
-      body+=`<div class="qf ansbox"><label>✓ ${tp==='fill_gaps'?'Правильный ответ (через запятую если несколько пропусков)':'Эталонный ответ'}</label><input type="text" id="${b}-a" value="${esc(q.answer)}" placeholder="${tp==='fill_gaps'?'has visited':'Правильный ответ'}"></div>`;
+      body += `<div class="qf ansbox"><label>✓ ${tp === 'fill_gaps' ? 'Правильный ответ (через запятую если несколько пропусков)' : 'Эталонный ответ'}</label><input type="text" id="${b}-a" value="${esc(q.answer)}" placeholder="${tp === 'fill_gaps' ? 'has visited' : 'Правильный ответ'}"></div>`;
     }
- 
-    div.innerHTML=`<div class="qhead"><div class="qnum">${i+1}</div><span style="font-size:13px;font-weight:500;flex:1;color:var(--ink2)">Вопрос ${i+1}</span><button class="btn bghost bsm" onclick="moveQ(${i},-1)" title="Вверх">↑</button><button class="btn bghost bsm" onclick="moveQ(${i},1)" title="Вниз">↓</button><button class="btn bdanger bsm" onclick="rmQ(${i})">Удалить</button></div><div class="qbody">${body}</div>`;
+
+    div.innerHTML = `<div class="qhead"><div class="qnum">${i + 1}</div><span style="font-size:13px;font-weight:500;flex:1;color:var(--ink2)">Вопрос ${i + 1}</span><button class="btn bghost bsm" onclick="moveQ(${i},-1)">↑</button><button class="btn bghost bsm" onclick="moveQ(${i},1)">↓</button><button class="btn bdanger bsm" onclick="rmQ(${i})">Удалить</button></div><div class="qbody">${body}</div>`;
     c.appendChild(div);
   });
 }
- 
-function addQ(){
+
+function addQ() {
   syncEditor();
-  eqArr.push({id:eqArr.length+1,text:'',answer:'',options:['','','',''],words:[]});
+  eqArr.push({ id: eqArr.length + 1, text: '', answer: '', options: ['', '', '', ''], words: [] });
   renderEditor();
-  const cards=document.querySelectorAll('.qcard');
-  if(cards.length)cards[cards.length-1].scrollIntoView({behavior:'smooth',block:'center'});
+  const cards = document.querySelectorAll('.qcard');
+  if (cards.length) cards[cards.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
- 
-function rmQ(i){
-  if(eqArr.length<=1){alert('Должен быть хотя бы 1 вопрос');return;}
-  syncEditor();eqArr.splice(i,1);eqArr.forEach((q,idx)=>q.id=idx+1);renderEditor();
+function rmQ(i) {
+  if (eqArr.length <= 1) { alert('Должен быть хотя бы 1 вопрос'); return; }
+  syncEditor(); eqArr.splice(i, 1); eqArr.forEach((q, idx) => q.id = idx + 1); renderEditor();
 }
- 
-function moveQ(i,d){
-  syncEditor();const j=i+d;if(j<0||j>=eqArr.length)return;
-  [eqArr[i],eqArr[j]]=[eqArr[j],eqArr[i]];eqArr.forEach((q,idx)=>q.id=idx+1);renderEditor();
+function moveQ(i, d) {
+  syncEditor(); const j = i + d; if (j < 0 || j >= eqArr.length) return;
+  [eqArr[i], eqArr[j]] = [eqArr[j], eqArr[i]]; eqArr.forEach((q, idx) => q.id = idx + 1); renderEditor();
 }
- 
-function addOpt(qi){syncEditor();if(!eqArr[qi].options)eqArr[qi].options=[];eqArr[qi].options.push('');renderEditor();}
-function rmOpt(qi,oi){syncEditor();if(eqArr[qi].options.length<=2){alert('Минимум 2 варианта');return;}eqArr[qi].options.splice(oi,1);renderEditor();}
-function esc(s){return String(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
- 
-function publishTask(){
+function addOpt(qi) { syncEditor(); if (!eqArr[qi].options) eqArr[qi].options = []; eqArr[qi].options.push(''); renderEditor(); }
+function rmOpt(qi, oi) { syncEditor(); if (eqArr[qi].options.length <= 2) { alert('Минимум 2 варианта'); return; } eqArr[qi].options.splice(oi, 1); renderEditor(); }
+function esc(s) { return String(s || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+
+// ── Publish ───────────────────────────────────────────────────────────────────
+async function publishTask() {
   syncEditor();
-  const name=document.getElementById('tname').value.trim()||'Задание',tp=getEType();
-  const ee=document.getElementById('eerr');
-  for(let i=0;i<eqArr.length;i++){
-    const q=eqArr[i];
-    if(tp==='multiple_choice'){
-      const rds=document.querySelectorAll(`input[name="q${i}-r"]`);let ch=false;
-      rds.forEach(r=>{if(r.checked)ch=true;});
-      if(!ch){ee.textContent=`Вопрос ${i+1}: отметьте правильный вариант`;ee.classList.remove('hidden');return;}
-    } else if(tp==='true_false'){
-      const rds=document.querySelectorAll(`input[name="q${i}-r"]`);let ch=false;
-      rds.forEach(r=>{if(r.checked)ch=true;});
-      if(!ch){ee.textContent=`Вопрос ${i+1}: выберите Верно или Неверно`;ee.classList.remove('hidden');return;}
-    } else if(!q.answer){
-      ee.textContent=`Вопрос ${i+1}: укажите правильный ответ`;ee.classList.remove('hidden');return;
+  const key = getKey();
+  if (!key) { alert('Нажмите «Получить ключ» или вставьте X-Client-Key вверху'); return; }
+
+  const name = document.getElementById('tname').value.trim() || 'Задание';
+  const tp = getEType();
+  const ee = document.getElementById('eerr');
+
+  // Validation
+  for (let i = 0; i < eqArr.length; i++) {
+    const q = eqArr[i];
+    if (tp === 'multiple_choice') {
+      const rds = document.querySelectorAll(`input[name="q${i}-r"]`); let ch = false;
+      rds.forEach(r => { if (r.checked) ch = true; });
+      if (!ch) { ee.textContent = `Вопрос ${i + 1}: отметьте правильный вариант`; ee.classList.remove('hidden'); return; }
+    } else if (tp === 'true_false') {
+      const rds = document.querySelectorAll(`input[name="q${i}-r"]`); let ch = false;
+      rds.forEach(r => { if (r.checked) ch = true; });
+      if (!ch) { ee.textContent = `Вопрос ${i + 1}: выберите Верно или Неверно`; ee.classList.remove('hidden'); return; }
+    } else if (!q.answer) {
+      ee.textContent = `Вопрос ${i + 1}: укажите правильный ответ`; ee.classList.remove('hidden'); return;
     }
   }
   ee.classList.add('hidden');
- 
-  // finalize radio answers
-  if(tp==='multiple_choice'){
-    eqArr.forEach((q,i)=>{document.querySelectorAll(`input[name="q${i}-r"]`).forEach((r,ri)=>{if(r.checked)q.answer=q.options[ri]||'';});});
+
+  // Finalize radio answers
+  if (tp === 'multiple_choice') {
+    eqArr.forEach((q, i) => { document.querySelectorAll(`input[name="q${i}-r"]`).forEach((r, ri) => { if (r.checked) q.answer = q.options[ri] || ''; }); });
   }
-  if(tp==='true_false'){
-    eqArr.forEach((q,i)=>{document.querySelectorAll(`input[name="q${i}-r"]`).forEach(r=>{if(r.checked)q.answer=r.value;});});
+  if (tp === 'true_false') {
+    eqArr.forEach((q, i) => { document.querySelectorAll(`input[name="q${i}-r"]`).forEach(r => { if (r.checked) q.answer = r.value; }); });
   }
- 
-  const code=curCode&&tasks.find(t=>t.code===curCode)?curCode:genCode();
-  const idx=tasks.findIndex(t=>t.code===code);
-  const task={name,type:tp,code,created:Date.now(),questions:eqArr.map((q,i)=>({...q,id:i+1})),results:idx>=0?tasks[idx].results:[]};
-  if(idx>=0)tasks[idx]=task;else tasks.push(task);
-  saveTasks();curCode=code;
-  const url=location.origin+location.pathname+'#task/'+code;
-  document.getElementById('surl').textContent=url;
-  document.getElementById('scode').textContent=code;
-  document.getElementById('s-link').classList.remove('hidden');
-  document.getElementById('s-link').scrollIntoView({behavior:'smooth'});
-  renderTList();renderRSel();
+
+  const schema = { name, type: tp, questions: eqArr.map((q, i) => ({ ...q, id: i + 1 })) };
+
+  showOv('Публикую задание...');
+  try {
+    const res = await fetch(`${API}/api/v1/tasks/publish`, {
+      method: 'POST',
+      headers: { 'X-Client-Key': key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: name, schema_json: schema })
+    });
+    if (res.status === 401) throw new Error('Неверный ключ. Нажмите «Получить ключ».');
+    if (!res.ok) { const e = await res.json(); throw new Error(e.error || 'Ошибка публикации'); }
+
+    const { task_id } = await res.json();
+    curTaskId = task_id;
+
+    const url = location.origin + location.pathname + '#task/' + task_id;
+    document.getElementById('surl').textContent = url;
+    document.getElementById('scode').textContent = task_id;
+    document.getElementById('s-link').classList.remove('hidden');
+    document.getElementById('s-link').scrollIntoView({ behavior: 'smooth' });
+
+    await loadDashboardTasks();
+  } catch(e) {
+    ee.textContent = e.message; ee.classList.remove('hidden');
+  } finally {
+    hideOv();
+  }
 }
- 
-function editCurrent(){
-  const t=tasks.find(t=>t.code===curCode);if(!t)return;
-  loadEditor(t);document.getElementById('s-link').classList.add('hidden');
-}
- 
-function genCode(){
-  const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  return Array.from({length:5},()=>c[Math.floor(Math.random()*c.length)]).join('');
-}
- 
-function copyUrl(){
-  navigator.clipboard.writeText(document.getElementById('surl').textContent).then(()=>{
-    const b=event.target;b.textContent='✓ Скопировано';setTimeout(()=>b.textContent='Копировать',1800);
+
+function copyUrl() {
+  navigator.clipboard.writeText(document.getElementById('surl').textContent).then(() => {
+    const b = event.target; b.textContent = '✓ Скопировано'; setTimeout(() => b.textContent = 'Копировать', 1800);
   });
 }
- 
-function resetUpload(){
-  ['imgarea','s-edit','s-link'].forEach(id=>document.getElementById(id).classList.add('hidden'));
-  document.getElementById('finput').value='';upB64=null;upMime=null;curCode=null;
+
+function resetUpload() {
+  ['imgarea', 's-edit', 's-link'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  document.getElementById('finput').value = ''; upFile = null; curTaskId = null;
 }
-function newTask(){resetUpload();document.getElementById('s-results').classList.add('hidden');}
- 
-function viewResults(){
-  document.getElementById('s-results').classList.remove('hidden');renderRSel();
-  if(curCode){document.getElementById('rsel').value=curCode;loadResults(curCode);}
-  document.getElementById('s-results').scrollIntoView({behavior:'smooth'});
+function newTask() { resetUpload(); document.getElementById('s-results').classList.add('hidden'); }
+
+// ── Dashboard ─────────────────────────────────────────────────────────────────
+async function loadDashboardTasks() {
+  const key = getKey();
+  if (!key) return;
+  try {
+    const res = await fetch(`${API}/api/v1/dashboard/tasks`, { headers: { 'X-Client-Key': key } });
+    if (!res.ok) return;
+    dashboardTasks = await res.json();
+    renderTList();
+    renderRSel();
+  } catch(e) { /* silent */ }
 }
- 
-function renderRSel(){
-  const s=document.getElementById('rsel'),cv=s.value;
-  s.innerHTML='<option value="">— выберите задание —</option>'+tasks.slice().reverse().map(t=>`<option value="${t.code}">${t.name} (${t.code})</option>`).join('');
-  if(cv)s.value=cv;
-}
- 
-function loadResults(code){
-  const rb=document.getElementById('rbody'),re=document.getElementById('remp');
-  if(!code){rb.classList.add('hidden');re.classList.add('hidden');return;}
-  const t=tasks.find(t=>t.code===code);if(!t)return;
-  const res=t.results||[],done=res.filter(r=>r.done);
-  document.getElementById('st-t').textContent=res.length||'0';
-  document.getElementById('st-d').textContent=done.length;
-  const avg=done.length?Math.round(done.reduce((s,r)=>s+(r.score/r.total)*100,0)/done.length)+'%':'—';
-  document.getElementById('st-a').textContent=avg;
-  if(!res.length){rb.classList.add('hidden');re.classList.remove('hidden');return;}
-  re.classList.add('hidden');rb.classList.remove('hidden');
-  const sc=p=>p>=70?'#16a34a':p>=40?'#d97706':'#dc2626';
-  document.getElementById('rtw').innerHTML=`<table class="rtable">
-    <thead><tr><th>Ученик</th><th>Результат</th><th>Балл</th><th>Время</th></tr></thead>
-    <tbody>${res.map(r=>{
-      const p=r.done?Math.round((r.score/r.total)*100):0,col=sc(p);
-      const ini=r.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-      const ti=new Date(r.ts).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
-      return`<tr><td><div style="display:flex;align-items:center;gap:8px"><div class="av">${ini}</div>${r.name}</div></td><td><div class="mbar"><div class="mtrack"><div class="mfill" style="width:${p}%;background:${col}"></div></div><span style="font-size:12px;color:${col};font-weight:600">${p}%</span></div></td><td><b>${r.score}/${r.total}</b></td><td style="color:var(--ink3)">${ti}</td></tr>`;
-    }).join('')}</tbody></table>`;
-}
- 
-function clearRes(){
-  const code=document.getElementById('rsel').value;
-  if(!code||!confirm('Очистить?'))return;
-  const t=tasks.find(t=>t.code===code);if(t){t.results=[];saveTasks();loadResults(code);}
-}
- 
-function renderTList(){
-  const el=document.getElementById('tlist');
-  if(!tasks.length){el.innerHTML='<div style="font-size:13px;color:var(--ink3);text-align:center;padding:20px 0">Заданий пока нет.</div>';return;}
-  el.innerHTML=tasks.slice().reverse().map(t=>{
-    const done=(t.results||[]).filter(r=>r.done).length,tot=(t.results||[]).length;
-    const d=new Date(t.created).toLocaleDateString('ru');
-    return`<div class="trow"><div style="flex:1"><div class="tname">${t.name}</div><div class="tmeta">${d} · ${t.code} · ${t.questions?.length||0} вопр.</div></div><div class="row" style="gap:6px;flex-shrink:0"><span class="badge bgreen2">${done}/${tot}</span><button class="btn bsm" onclick="openEdit('${t.code}')">✏️ Изменить</button><button class="btn bsm" onclick="copyTUrl('${t.code}')">🔗 Ссылка</button><button class="btn bsm bdanger" onclick="delTask('${t.code}')">✕</button></div></div>`;
+
+function renderTList() {
+  const el = document.getElementById('tlist');
+  if (!dashboardTasks.length) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--ink3);text-align:center;padding:20px 0">Заданий пока нет.</div>';
+    return;
+  }
+  el.innerHTML = [...dashboardTasks].reverse().map(t => {
+    const cnt = t.answers ? t.answers.length : 0;
+    const d = new Date(t.created_at).toLocaleDateString('ru');
+    const qCount = t.schema_json && t.schema_json.questions ? t.schema_json.questions.length : '?';
+    return `<div class="trow">
+      <div style="flex:1">
+        <div class="tname">${t.title}</div>
+        <div class="tmeta">${d} · ${qCount} вопр. · ${cnt} ответов</div>
+      </div>
+      <div class="row" style="gap:6px;flex-shrink:0">
+        <button class="btn bsm bprimary" onclick="viewResults('${t.id}')">📊 Результаты</button>
+        <button class="btn bsm" onclick="copyTaskUrl('${t.id}')">🔗 Ссылка</button>
+      </div>
+    </div>`;
   }).join('');
 }
- 
-function openEdit(code){
-  const t=tasks.find(t=>t.code===code);if(!t)return;
-  curCode=code;loadEditor(t);
-  document.getElementById('s-link').classList.add('hidden');
-  document.getElementById('s-edit').scrollIntoView({behavior:'smooth'});
+
+function renderRSel() {
+  const s = document.getElementById('rsel'), cv = s.value;
+  s.innerHTML = '<option value="">— выберите задание —</option>' +
+    [...dashboardTasks].reverse().map(t => `<option value="${t.id}">${t.title}</option>`).join('');
+  if (cv) s.value = cv;
 }
-function copyTUrl(code){
-  navigator.clipboard.writeText(location.origin+location.pathname+'#task/'+code).then(()=>alert('Скопировано!'));
+
+function viewResults(taskId) {
+  const id = taskId || curTaskId;
+  document.getElementById('s-results').classList.remove('hidden');
+  renderRSel();
+  if (id) { document.getElementById('rsel').value = id; loadResults(id); }
+  document.getElementById('s-results').scrollIntoView({ behavior: 'smooth' });
 }
-function delTask(code){
-  if(!confirm('Удалить '+code+'?'))return;
-  tasks=tasks.filter(t=>t.code!==code);saveTasks();renderTList();renderRSel();
+
+async function loadResults(taskId) {
+  const rb = document.getElementById('rbody'), re = document.getElementById('remp');
+  if (!taskId) { rb.classList.add('hidden'); re.classList.add('hidden'); return; }
+
+  const task = dashboardTasks.find(t => t.id === taskId);
+  if (!task) { await loadDashboardTasks(); const t2 = dashboardTasks.find(t => t.id === taskId); if (!t2) return; return loadResults(taskId); }
+
+  const answers = task.answers || [];
+  document.getElementById('st-t').textContent = answers.length;
+  document.getElementById('st-d').textContent = answers.length;
+
+  if (!answers.length) { rb.classList.add('hidden'); re.classList.remove('hidden'); return; }
+  re.classList.add('hidden'); rb.classList.remove('hidden');
+
+  // Compute scores using schema
+  const schema = task.schema_json;
+  const scored = answers.map(ans => {
+    let score = 0, total = schema.questions ? schema.questions.length : 0;
+    if (schema.questions) {
+      schema.questions.forEach(q => {
+        const userAns = ans.payload_json[q.id] || ans.payload_json[String(q.id)];
+        if (scoreQuestion(q, schema.type, userAns)) score++;
+      });
+    }
+    return { ...ans, score, total, pct: total ? Math.round((score / total) * 100) : 0 };
+  });
+
+  const avgPct = scored.length ? Math.round(scored.reduce((s, r) => s + r.pct, 0) / scored.length) : 0;
+  document.getElementById('st-a').textContent = avgPct + '%';
+
+  const sc = p => p >= 70 ? '#16a34a' : p >= 40 ? '#d97706' : '#dc2626';
+  document.getElementById('rtw').innerHTML = `<table class="rtable">
+    <thead><tr><th>Ученик</th><th>Результат</th><th>Балл</th><th>Время</th></tr></thead>
+    <tbody>${scored.map(r => {
+      const col = sc(r.pct);
+      const ini = r.user_name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+      const ti = new Date(r.submitted_at).toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' });
+      return `<tr>
+        <td><div style="display:flex;align-items:center;gap:8px"><div class="av">${ini}</div>${r.user_name}</div></td>
+        <td><div class="mbar"><div class="mtrack"><div class="mfill" style="width:${r.pct}%;background:${col}"></div></div><span style="font-size:12px;color:${col};font-weight:600">${r.pct}%</span></div></td>
+        <td><b>${r.score}/${r.total}</b></td>
+        <td style="color:var(--ink3)">${ti}</td>
+      </tr>`;
+    }).join('')}</tbody></table>`;
 }
- 
-// STUDENT
-function openByCode(){
-  const code=document.getElementById('cinput').value.trim().toUpperCase(),ee=document.getElementById('cerr');
-  if(!code){ee.textContent='Введи код';ee.classList.remove('hidden');return;}
-  const t=tasks.find(t=>t.code===code);
-  if(!t){ee.textContent='Задание «'+code+'» не найдено.';ee.classList.remove('hidden');return;}
-  ee.classList.add('hidden');studTask=t;studAns={};
-  document.getElementById('snlabel').textContent=t.name;
-  document.getElementById('st-enter').classList.add('hidden');
-  document.getElementById('st-name').classList.remove('hidden');
-  document.getElementById('sname').value='';
-  document.getElementById('sname').focus();
+
+function scoreQuestion(q, type, userAns) {
+  if (userAns === undefined || userAns === null) return false;
+  const correct = q.answer.toString().trim().toLowerCase();
+  switch (type) {
+    case 'multiple_choice':
+    case 'true_false':
+      return userAns.toString().toLowerCase() === correct;
+    case 'fill_gaps': {
+      const vals = typeof userAns === 'object' && !Array.isArray(userAns)
+        ? Object.values(userAns) : [userAns];
+      const cp = correct.split(',').map(s => s.trim());
+      return vals.length > 0 && vals.every((v, i) => v.toString().toLowerCase() === (cp[i] || cp[0]));
+    }
+    case 'order_words': {
+      const sentence = Array.isArray(userAns) ? userAns.join(' ') : userAns.toString();
+      return sentence.toLowerCase() === correct;
+    }
+    case 'open_answer':
+      return userAns.toString().toLowerCase().includes(correct.substring(0, 8));
+    default: return false;
+  }
 }
- 
-function startTask(){
-  const name=document.getElementById('sname').value.trim();
-  if(!name){alert('Введи имя');return;}
+
+function copyTaskUrl(taskId) {
+  const url = location.origin + location.pathname + '#task/' + taskId;
+  navigator.clipboard.writeText(url).then(() => alert('Ссылка скопирована!'));
+}
+
+// ── Student ───────────────────────────────────────────────────────────────────
+async function openByCode() {
+  const taskId = document.getElementById('cinput').value.trim();
+  const ee = document.getElementById('cerr');
+  if (!taskId) { ee.textContent = 'Введите ID задания'; ee.classList.remove('hidden'); return; }
+  ee.classList.add('hidden');
+
+  showOv('Загружаю задание...');
+  try {
+    const res = await fetch(`${API}/static/tasks/${taskId}.json`);
+    if (!res.ok) throw new Error('not found');
+    studTask = await res.json();
+    studTaskId = taskId;
+    document.getElementById('snlabel').textContent = studTask.name || 'Задание';
+    document.getElementById('st-enter').classList.add('hidden');
+    document.getElementById('st-name').classList.remove('hidden');
+    document.getElementById('sname').value = '';
+    document.getElementById('sname').focus();
+  } catch(e) {
+    ee.textContent = 'Задание не найдено. Проверьте ID.'; ee.classList.remove('hidden');
+  } finally {
+    hideOv();
+  }
+}
+
+function startTask() {
+  const name = document.getElementById('sname').value.trim();
+  if (!name) { alert('Введи имя'); return; }
   document.getElementById('st-name').classList.add('hidden');
-  renderStudTask(studTask,name);
+  renderStudTask(studTask, name);
 }
- 
-function renderStudTask(task,sname){
-  document.getElementById('ttitle').textContent=task.name;
-  document.getElementById('tsub').textContent=(task.questions?.length||0)+' вопросов · '+sname;
-  document.getElementById('tbadge').textContent='В процессе';
-  document.getElementById('tbadge').className='badge bblue';
+
+function renderStudTask(task, sname) {
+  document.getElementById('ttitle').textContent = task.name;
+  document.getElementById('tsub').textContent = (task.questions?.length || 0) + ' вопросов · ' + sname;
+  document.getElementById('tbadge').textContent = 'В процессе';
+  document.getElementById('tbadge').className = 'badge bblue';
   document.getElementById('rblock').classList.add('hidden');
   document.getElementById('crow').classList.remove('hidden');
   document.getElementById('st-body').classList.remove('hidden');
-  studAns={};
-  const area=document.getElementById('qarea');area.innerHTML='';
-  (task.questions||[]).forEach(q=>{
-    const div=document.createElement('div');div.className='qstud';div.dataset.qid=q.id;
-    if(task.type==='multiple_choice'){
-      div.innerHTML=`<div class="qnum2">Вопрос ${q.id}</div><div class="qtext">${q.text}</div><div class="opts">${(q.options||[]).map((o,i)=>{const L=['A','B','C','D','E'];return`<button class="obtn" data-qid="${q.id}" data-val="${escH(o)}" onclick="selOpt(this,${q.id},'${escQ(o)}')"><span class="oletter">${L[i]||i+1}</span>${o}</button>`}).join('')}</div>`;
-    }else if(task.type==='true_false'){
-      div.innerHTML=`<div class="qnum2">Вопрос ${q.id}</div><div class="qtext">${q.text}</div><div class="opts"><button class="obtn" data-qid="${q.id}" data-val="true" onclick="selOpt(this,${q.id},'true')"><span class="oletter">T</span>Верно</button><button class="obtn" data-qid="${q.id}" data-val="false" onclick="selOpt(this,${q.id},'false')"><span class="oletter">F</span>Неверно</button></div>`;
-    }else if(task.type==='fill_gaps'){
-      let gi=0;
-      const h=q.text.replace(/___/g,()=>{const id=`g_${q.id}_${gi++}`;return`<input class="gapinp" id="${id}" data-qid="${q.id}" data-gi="${gi-1}" placeholder="…" oninput="recGap(${q.id},this)">`;});
-      div.innerHTML=`<div class="qnum2">Вопрос ${q.id}</div><div class="qtext gapwrap">${h}</div>`;
-    }else if(task.type==='order_words'){
-      const ws=shuf([...(q.words&&q.words.length?q.words:q.answer.split(' '))]);
-      studAns[q.id]=[];
-      div.innerHTML=`<div class="qnum2">Вопрос ${q.id}</div>${q.text?`<div class="qtext">${q.text}</div>`:''}<div style="font-size:12px;color:var(--ink3);margin-bottom:6px">Нажимай слова по порядку:</div><div class="owrap" id="pl-${q.id}"></div><div class="row" style="flex-wrap:wrap;gap:6px;margin-top:8px" id="ch-${q.id}">${ws.map(w=>`<button class="wchip" onclick="placeW(${q.id},this,'${escQ(w)}')">${w}</button>`).join('')}</div><button class="btn bsm" style="margin-top:8px" onclick="clrOrd(${q.id})">Сбросить</button>`;
-    }else{
-      div.innerHTML=`<div class="qnum2">Вопрос ${q.id}</div><div class="qtext">${q.text}</div><textarea rows="2" placeholder="Ваш ответ..." oninput="studAns[${q.id}]=this.value"></textarea>`;
+  studAns = {};
+  const area = document.getElementById('qarea'); area.innerHTML = '';
+
+  (task.questions || []).forEach(q => {
+    const div = document.createElement('div');
+    div.className = 'qstud'; div.dataset.qid = q.id;
+    if (task.type === 'multiple_choice') {
+      div.innerHTML = `<div class="qnum2">Вопрос ${q.id}</div><div class="qtext">${q.text}</div><div class="opts">${(q.options || []).map((o, i) => {
+        const L = ['A', 'B', 'C', 'D', 'E'];
+        return `<button class="obtn" data-qid="${q.id}" data-val="${escH(o)}" onclick="selOpt(this,${q.id},'${escQ(o)}')"><span class="oletter">${L[i] || i + 1}</span>${o}</button>`;
+      }).join('')}</div>`;
+    } else if (task.type === 'true_false') {
+      div.innerHTML = `<div class="qnum2">Вопрос ${q.id}</div><div class="qtext">${q.text}</div><div class="opts">
+        <button class="obtn" data-qid="${q.id}" data-val="true" onclick="selOpt(this,${q.id},'true')"><span class="oletter">T</span>Верно</button>
+        <button class="obtn" data-qid="${q.id}" data-val="false" onclick="selOpt(this,${q.id},'false')"><span class="oletter">F</span>Неверно</button>
+      </div>`;
+    } else if (task.type === 'fill_gaps') {
+      let gi = 0;
+      const h = q.text.replace(/___/g, () => {
+        const id = `g_${q.id}_${gi++}`;
+        return `<input class="gapinp" id="${id}" data-qid="${q.id}" data-gi="${gi - 1}" placeholder="…" oninput="recGap(${q.id},this)">`;
+      });
+      div.innerHTML = `<div class="qnum2">Вопрос ${q.id}</div><div class="qtext gapwrap">${h}</div>`;
+    } else if (task.type === 'order_words') {
+      const ws = shuf([...(q.words && q.words.length ? q.words : q.answer.split(' '))]);
+      studAns[q.id] = [];
+      div.innerHTML = `<div class="qnum2">Вопрос ${q.id}</div>${q.text ? `<div class="qtext">${q.text}</div>` : ''}<div style="font-size:12px;color:var(--ink3);margin-bottom:6px">Нажимай слова по порядку:</div><div class="owrap" id="pl-${q.id}"></div><div class="row" style="flex-wrap:wrap;gap:6px;margin-top:8px" id="ch-${q.id}">${ws.map(w => `<button class="wchip" onclick="placeW(${q.id},this,'${escQ(w)}')">${w}</button>`).join('')}</div><button class="btn bsm" style="margin-top:8px" onclick="clrOrd(${q.id})">Сбросить</button>`;
+    } else {
+      div.innerHTML = `<div class="qnum2">Вопрос ${q.id}</div><div class="qtext">${q.text}</div><textarea rows="2" placeholder="Ваш ответ..." oninput="studAns[${q.id}]=this.value"></textarea>`;
     }
     area.appendChild(div);
   });
 }
- 
-function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function escQ(s){return String(s).replace(/'/g,"\\'");}
-function shuf(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function selOpt(btn,qid,val){document.querySelectorAll(`[data-qid="${qid}"]`).forEach(b=>{b.classList.remove('sel');b.disabled=false;});btn.classList.add('sel');studAns[qid]=val;}
-function recGap(qid,inp){if(!studAns[qid]||typeof studAns[qid]!=='object'||Array.isArray(studAns[qid]))studAns[qid]={};studAns[qid][inp.dataset.gi]=inp.value.trim();}
-function placeW(qid,btn,w){
-  if(!Array.isArray(studAns[qid]))studAns[qid]=[];
+
+function escH(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function escQ(s) { return String(s).replace(/'/g, "\\'"); }
+function shuf(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function selOpt(btn, qid, val) { document.querySelectorAll(`[data-qid="${qid}"]`).forEach(b => { b.classList.remove('sel'); b.disabled = false; }); btn.classList.add('sel'); studAns[qid] = val; }
+function recGap(qid, inp) { if (!studAns[qid] || typeof studAns[qid] !== 'object' || Array.isArray(studAns[qid])) studAns[qid] = {}; studAns[qid][inp.dataset.gi] = inp.value.trim(); }
+function placeW(qid, btn, w) {
+  if (!Array.isArray(studAns[qid])) studAns[qid] = [];
   btn.classList.add('used');
-  const pl=document.getElementById('pl-'+qid),chip=document.createElement('button');
-  chip.className='wchip placed';chip.textContent=w;chip.dataset.word=w;
-  chip.onclick=()=>{chip.remove();btn.classList.remove('used');studAns[qid]=Array.from(pl.children).map(c=>c.dataset.word);};
-  pl.appendChild(chip);studAns[qid]=Array.from(pl.children).map(c=>c.dataset.word);
+  const pl = document.getElementById('pl-' + qid), chip = document.createElement('button');
+  chip.className = 'wchip placed'; chip.textContent = w; chip.dataset.word = w;
+  chip.onclick = () => { chip.remove(); btn.classList.remove('used'); studAns[qid] = Array.from(pl.children).map(c => c.dataset.word); };
+  pl.appendChild(chip); studAns[qid] = Array.from(pl.children).map(c => c.dataset.word);
 }
-function clrOrd(qid){studAns[qid]=[];document.getElementById('pl-'+qid).innerHTML='';document.querySelectorAll(`#ch-${qid} .wchip`).forEach(c=>c.classList.remove('used'));}
- 
-function checkAnswers(){
-  const task=studTask;if(!task)return;
-  const sname=document.getElementById('tsub').textContent.split(' · ')[1]||'Ученик';
-  let score=0,total=task.questions.length;
-  task.questions.forEach(q=>{
-    const correct=q.answer.toString().trim().toLowerCase(),ans=studAns[q.id];
-    let ok=false;
-    if(task.type==='fill_gaps'){
-      const vals=Object.values(ans||{}),cp=correct.split(',').map(s=>s.trim());
-      ok=vals.length>0&&vals.every((v,i)=>v.toLowerCase()===(cp[i]||cp[0]));
-      document.querySelectorAll(`input[data-qid="${q.id}"]`).forEach((inp,i)=>{
-        const ca=(correct.split(',')[i]||correct).trim();
-        inp.classList.add(inp.value.trim().toLowerCase()===ca?'ok':'bad');inp.disabled=true;
+function clrOrd(qid) { studAns[qid] = []; document.getElementById('pl-' + qid).innerHTML = ''; document.querySelectorAll(`#ch-${qid} .wchip`).forEach(c => c.classList.remove('used')); }
+
+async function checkAnswers() {
+  const task = studTask; if (!task) return;
+  const sname = document.getElementById('tsub').textContent.split(' · ')[1] || 'Ученик';
+  let score = 0, total = task.questions.length;
+
+  task.questions.forEach(q => {
+    const correct = q.answer.toString().trim().toLowerCase();
+    const ans = studAns[q.id];
+    let ok = false;
+
+    if (task.type === 'fill_gaps') {
+      const vals = Object.values(ans || {}), cp = correct.split(',').map(s => s.trim());
+      ok = vals.length > 0 && vals.every((v, i) => v.toLowerCase() === (cp[i] || cp[0]));
+      document.querySelectorAll(`input[data-qid="${q.id}"]`).forEach((inp, i) => {
+        const ca = (correct.split(',')[i] || correct).trim();
+        inp.classList.add(inp.value.trim().toLowerCase() === ca ? 'ok' : 'bad'); inp.disabled = true;
       });
-    }else if(task.type==='order_words'){
-      ok=(Array.isArray(ans)?ans:[]).join(' ').toLowerCase()===correct;
-    }else if(task.type==='multiple_choice'||task.type==='true_false'){
-      ok=(ans||'').toString().toLowerCase()===correct;
-      document.querySelectorAll(`[data-qid="${q.id}"]`).forEach(b=>{
-        b.disabled=true;const bv=b.dataset.val?.toLowerCase();
-        if(bv===correct)b.classList.add('ok');
-        else if(bv===(ans||'').toString().toLowerCase()&&!ok)b.classList.add('bad');
+    } else if (task.type === 'order_words') {
+      ok = (Array.isArray(ans) ? ans : []).join(' ').toLowerCase() === correct;
+    } else if (task.type === 'multiple_choice' || task.type === 'true_false') {
+      ok = (ans || '').toString().toLowerCase() === correct;
+      document.querySelectorAll(`[data-qid="${q.id}"]`).forEach(b => {
+        b.disabled = true;
+        const bv = b.dataset.val?.toLowerCase();
+        if (bv === correct) b.classList.add('ok');
+        else if (bv === (ans || '').toString().toLowerCase() && !ok) b.classList.add('bad');
         b.classList.remove('sel');
       });
-    }else{ok=(ans||'').toString().trim().toLowerCase().includes(correct.substring(0,8));}
-    if(ok)score++;
-    const card=document.querySelector(`.qstud[data-qid="${q.id}"]`);
-    if(card)card.style.borderColor=ok?'var(--green)':'var(--red)';
+    } else {
+      ok = (ans || '').toString().trim().toLowerCase().includes(correct.substring(0, 8));
+    }
+
+    if (ok) score++;
+    const card = document.querySelector(`.qstud[data-qid="${q.id}"]`);
+    if (card) card.style.borderColor = ok ? 'var(--green)' : 'var(--red)';
   });
-  const pct=Math.round((score/total)*100);
-  const col=pct>=70?'var(--green)':pct>=40?'var(--amber)':'var(--red)';
-  const msg=pct===100?'Отлично! Всё правильно! 🎉':pct>=70?'Хорошая работа!':pct>=40?'Неплохо, есть ошибки':'Нужно повторить тему';
-  document.getElementById('rblock').innerHTML=`<div style="padding:16px;background:var(--bg);border-radius:var(--rs);border:1px solid var(--border)"><div style="font-size:16px;font-weight:600;color:${col};margin-bottom:4px">${msg}</div><div style="font-size:14px;color:var(--ink2)">${score} из ${total} правильно (${pct}%)</div><div class="rbar"><div class="rfill" style="width:${pct}%;background:${col}"></div></div></div>`;
+
+  const pct = Math.round((score / total) * 100);
+  const col = pct >= 70 ? 'var(--green)' : pct >= 40 ? 'var(--amber)' : 'var(--red)';
+  const msg = pct === 100 ? 'Отлично! Всё правильно! 🎉' : pct >= 70 ? 'Хорошая работа!' : pct >= 40 ? 'Неплохо, есть ошибки' : 'Нужно повторить тему';
+
+  document.getElementById('rblock').innerHTML = `<div style="padding:16px;background:var(--bg);border-radius:var(--rs);border:1px solid var(--border)"><div style="font-size:16px;font-weight:600;color:${col};margin-bottom:4px">${msg}</div><div style="font-size:14px;color:var(--ink2)">${score} из ${total} правильно (${pct}%)</div><div class="rbar"><div class="rfill" style="width:${pct}%;background:${col}"></div></div></div>`;
   document.getElementById('rblock').classList.remove('hidden');
   document.getElementById('crow').classList.add('hidden');
-  document.getElementById('tbadge').textContent='Сдано';
-  document.getElementById('tbadge').className='badge bgreen2';
-  const ti=tasks.findIndex(t=>t.code===task.code);
-  if(ti!==-1){if(!tasks[ti].results)tasks[ti].results=[];tasks[ti].results.push({name:sname,score,total,pct,done:true,ts:Date.now()});saveTasks();}
+  document.getElementById('tbadge').textContent = 'Сдано';
+  document.getElementById('tbadge').className = 'badge bgreen2';
+
+  // Отправляем ответы на сервер (payload_json: { questionId: answer })
+  const payload = {};
+  task.questions.forEach(q => { payload[q.id] = studAns[q.id] !== undefined ? studAns[q.id] : null; });
+
+  try {
+    await fetch(`${API}/api/v1/tasks/${studTaskId}/answers`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_name: sname, payload_json: payload })
+    });
+  } catch(e) { /* не критично */ }
 }
- 
-function showOv(m){document.getElementById('ovmsg').textContent=m;document.getElementById('overlay').classList.remove('hidden');}
-function hideOv(){document.getElementById('overlay').classList.add('hidden');}
- 
-window.addEventListener('load',()=>{
-  const k=localStorage.getItem('tb_key');if(k)document.getElementById('api-key').value=k;
-  if(!tasks.length){
-    tasks=[
-      {name:"Present Perfect — Fill in the gaps",code:"DEMO1",type:"fill_gaps",created:Date.now(),
-       questions:[{id:1,text:"She ___ (visit) Paris three times.",answer:"has visited"},{id:2,text:"They ___ (not finish) their homework yet.",answer:"haven't finished"},{id:3,text:"He ___ (live) in London since 2010.",answer:"has lived"}],
-       results:[{name:"Алина К.",score:2,total:3,pct:67,done:true,ts:Date.now()-3600000},{name:"Максим Т.",score:3,total:3,pct:100,done:true,ts:Date.now()-1800000}]},
-      {name:"Irregular Verbs — Multiple choice",code:"DEMO2",type:"multiple_choice",created:Date.now()-86400000,
-       questions:[{id:1,text:"Past form of 'go':",options:["goed","went","gone","going"],answer:"went"},{id:2,text:"Past form of 'buy':",options:["buyed","boughted","bought","buys"],answer:"bought"},{id:3,text:"Past form of 'see':",options:["seed","saw","seen","sawed"],answer:"saw"}],
-       results:[]}
-    ];saveTasks();
+
+// ── Overlay ───────────────────────────────────────────────────────────────────
+function showOv(m) { document.getElementById('ovmsg').textContent = m; document.getElementById('overlay').classList.remove('hidden'); }
+function hideOv() { document.getElementById('overlay').classList.add('hidden'); }
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+window.addEventListener('load', async () => {
+  const k = lsGet('tb_key');
+  console.log('[TB] init, stored key:', k ? k.slice(0,8) + '…' : 'none');
+  if (k) {
+    document.getElementById('api-key').value = k;
+    setKeyStatus('Сохранён ✓', true);
   }
-  renderTList();renderRSel();routeHash();
+  await loadDashboardTasks();
+  routeHash();
 });
 </script>
 </body>
 </html>
- 
