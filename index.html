@@ -539,7 +539,7 @@ async function publishTask() {
     const { task_id } = await res.json();
     curTaskId = task_id;
 
-    const url = location.origin + location.pathname + '#task/' + task_id;
+    const url = API + '/taskboard#task/' + task_id;
     document.getElementById('surl').textContent = url;
     document.getElementById('scode').textContent = task_id;
     document.getElementById('s-link').classList.remove('hidden');
