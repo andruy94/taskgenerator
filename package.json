@@ -1,0 +1,24 @@
+{
+  "name": "taskgenerator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ui-test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andruy94/taskgenerator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/andruy94/taskgenerator/issues"
+  },
+  "homepage": "https://github.com/andruy94/taskgenerator#readme",
+  "dependencies": {
+    "playwright": "^1.59.1"
+  }
+}

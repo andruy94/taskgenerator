@@ -1,0 +1,9 @@
+node_modules/
+ui-demo.webm
+ui-screenshot.png
+*.webm
+*.png
+.idea/
+.claude/
+C:Temptask.json
+gemini-code-1777156417639.html
