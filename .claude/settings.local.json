@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:localhost)",
+      "Bash(python -m http.server 8765 --directory \"C:\\\\Users\\\\Akimy\\\\IdeaProjects\\\\taskgenerator\")",
+      "Bash(curl -s http://localhost:8765/index.html)",
+      "Bash(python -c ' *)",
+      "Bash(node -e ' *)",
+      "Bash(node *)",
+      "Bash(curl *)"
+    ]
+  }
+}

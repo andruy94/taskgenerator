@@ -1,161 +1,257 @@
 <!DOCTYPE html>
-<!-- saved from url=(0014)about:internet -->
-<html lang="ru"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="ru">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-store">
 <title>TaskBoard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f7f6f2;--surface:#fff;--border:#e4e2db;--border2:#ccc9be;--ink:#1a1917;--ink2:#6b6860;--ink3:#a8a59e;--accent:#2563eb;--abg:#eff6ff;--green:#16a34a;--gbg:#f0fdf4;--gb:#bbf7d0;--red:#dc2626;--rbg:#fef2f2;--rb:#fecaca;--amber:#d97706;--ambg:#fffbeb;--r:10px;--rs:6px}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
-.page{display:none}.page.active{display:block}
-.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
-.logo{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
-.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
-.keybar{background:var(--ambg);border-bottom:1px solid #fde68a;padding:8px 20px;display:flex;align-items:center;gap:10px;font-size:13px;flex-wrap:wrap}
-.keybar input{flex:1;min-width:200px;max-width:340px;padding:6px 10px;border:1px solid var(--border2);border-radius:var(--rs);font-size:13px;font-family:monospace;background:var(--surface);color:var(--ink);outline:none}
-.keybar input:focus{border-color:var(--accent)}
-.container{max-width:760px;margin:0 auto;padding:28px 20px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.ctitle{font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
-.stitle{font-size:18px;font-weight:600;margin-bottom:6px}
-.ssub{font-size:14px;color:var(--ink2);margin-bottom:20px}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;font-size:13px;font-weight:500;border:1px solid var(--border2);border-radius:var(--rs);background:var(--surface);color:var(--ink);cursor:pointer;transition:all .12s;white-space:nowrap}
-.btn:hover{background:var(--bg);border-color:var(--ink3)}.btn:active{transform:scale(.98)}
-.bprimary{background:var(--accent);color:#fff;border-color:var(--accent)}.bprimary:hover{background:#1d4ed8;border-color:#1d4ed8}
-.bsm{padding:5px 11px;font-size:12px}
-.bgreen{background:var(--green);color:#fff;border-color:var(--green)}.bgreen:hover{background:#15803d}
-.bdanger{background:var(--rbg);color:var(--red);border-color:var(--rb)}
-.bghost{background:transparent;border-color:transparent;color:var(--ink3)}.bghost:hover{background:var(--bg);border-color:var(--border);color:var(--ink)}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-input[type=text],textarea,select{width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:var(--rs);font-size:14px;font-family:inherit;background:var(--surface);color:var(--ink);outline:none;transition:border-color .12s}
-input[type=text]:focus,textarea:focus,select:focus{border-color:var(--accent)}
-textarea{resize:vertical;line-height:1.5}
-label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bottom:5px}
-.field{margin-bottom:14px}
-.uzone{border:2px dashed var(--border2);border-radius:var(--r);padding:36px 20px;text-align:center;cursor:pointer;transition:all .15s;position:relative;background:var(--bg)}
-.uzone:hover,.uzone.drag{border-color:var(--accent);background:var(--abg)}
-.uzone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.uzone .uicon{font-size:32px;margin-bottom:10px}
-.uzone .utitle{font-size:15px;font-weight:500;color:var(--ink)}
-.uzone p{font-size:14px;color:var(--ink2);margin-top:4px}
-.imgprev{max-width:100%;max-height:200px;border-radius:var(--rs);border:1px solid var(--border);display:block;margin:12px 0}
-.badge{display:inline-flex;align-items:center;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600}
-.bblue{background:var(--abg);color:var(--accent)}
-.bgreen2{background:var(--gbg);color:var(--green);border:1px solid var(--gb)}
-.bfull{background:var(--ambg);color:var(--amber)}
-.codebox{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:10px 14px;font-family:monospace;font-size:13px;flex-wrap:wrap}
-.codeval{font-weight:600;color:var(--accent);flex:1;word-break:break-all}
-.divider{border:none;border-top:1px solid var(--border);margin:16px 0}
-.alert{padding:12px 16px;border-radius:var(--rs);font-size:13px;line-height:1.5}
-.agreen{background:var(--gbg);color:#14532d;border:1px solid var(--gb)}
-.ared{background:var(--rbg);color:#7f1d1d;border:1px solid var(--rb)}
-.ablue{background:var(--abg);color:#1e3a5f;border:1px solid #bfdbfe}
-.aamber{background:var(--ambg);color:#713f12;border:1px solid #fde68a}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid #ddd;border-top-color:var(--accent);border-radius:50%;animation:spin .65s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.hidden{display:none!important}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.qcard{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:12px;background:var(--surface)}
-.qhead{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--border)}
-.qnum{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
-.qbody{padding:14px}
-.qf{margin-bottom:10px}
-.qf label{font-size:12px;font-weight:500;color:var(--ink3);margin-bottom:4px}
-.qf input[type=text]{padding:7px 10px;font-size:13px}
-.optrow{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.optrow input[type=radio]{accent-color:var(--accent);width:16px;height:16px;flex-shrink:0;cursor:pointer}
-.optrow input[type=text]{flex:1;padding:6px 10px;font-size:13px}
-.ansbox{background:var(--gbg);border:1px solid var(--gb);border-radius:var(--rs);padding:10px 12px}
-.ansbox label{color:var(--green);font-size:12px;font-weight:600;margin-bottom:4px}
-.ansbox input[type=text]{border-color:var(--gb);font-size:13px;padding:6px 10px;background:#fff}
-.wbox{border:1px solid var(--border2);border-radius:var(--rs);padding:10px 12px;background:var(--abg)}
-.wbox label{font-size:12px;color:var(--accent);font-weight:500;margin-bottom:4px}
-.trow{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg);border-radius:var(--rs);border:1px solid var(--border);margin-bottom:8px}
-.trow:hover{background:#f0ede5}
-.tname{font-size:14px;font-weight:500;flex:1}
-.tmeta{font-size:12px;color:var(--ink3)}
-.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.scard{background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:14px;text-align:center}
-.snum{font-size:24px;font-weight:600}
-.slabel{font-size:11px;color:var(--ink3);margin-top:2px}
-.qstud{background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:16px;margin-bottom:10px}
-.qnum2{font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;margin-bottom:6px}
-.qtext{font-size:15px;line-height:1.55;margin-bottom:12px}
-.opts{display:flex;flex-direction:column;gap:6px}
-.obtn{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border2);border-radius:var(--rs);background:var(--surface);cursor:pointer;font-size:14px;color:var(--ink);transition:all .12s;text-align:left;width:100%}
-.obtn:hover{background:var(--bg);border-color:var(--ink3)}
-.obtn.sel{border-color:var(--accent);background:var(--abg);color:var(--accent)}
-.obtn.ok{border-color:var(--green);background:var(--gbg);color:#14532d}
-.obtn.bad{border-color:var(--red);background:var(--rbg);color:#7f1d1d}
-.obtn:disabled{cursor:default}
-.oletter{width:22px;height:22px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;opacity:.6}
-.gapwrap{font-size:15px;line-height:2.6}
-.gapinp{display:inline-block;border:none;border-bottom:2px solid var(--accent);background:transparent;font-size:15px;padding:0 4px;min-width:100px;color:var(--ink);outline:none;text-align:center}
-.gapinp.ok{border-color:var(--green);background:var(--gbg);color:var(--green);border-radius:4px}
-.gapinp.bad{border-color:var(--red);background:var(--rbg);color:var(--red);border-radius:4px}
-.owrap{display:flex;flex-wrap:wrap;gap:6px;min-height:44px;padding:8px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--rs)}
-.wchip{padding:5px 12px;background:var(--abg);border:1px solid #bfdbfe;border-radius:20px;font-size:14px;color:var(--accent);cursor:pointer;user-select:none}
-.wchip:hover{background:#dbeafe}
-.wchip.used{opacity:.35;pointer-events:none}
-.wchip.placed{background:var(--bg);border-color:var(--border2);color:var(--ink)}
-.rbar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:8px}
-.rfill{height:100%;border-radius:4px;transition:width .5s}
-.rtable{width:100%;border-collapse:collapse;font-size:13px}
-.rtable th{text-align:left;font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em;padding:6px 10px;border-bottom:1px solid var(--border)}
-.rtable td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
-.rtable tr:last-child td{border-bottom:none}
-.mbar{display:flex;align-items:center;gap:8px}
-.mtrack{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
-.mfill{height:100%;border-radius:3px}
-.av{width:28px;height:28px;border-radius:50%;background:var(--abg);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
-.overlay{position:fixed;inset:0;background:rgba(247,246,242,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:12px;backdrop-filter:blur(2px)}
-.overlay p{font-size:14px;color:var(--ink2)}
-.bspin{width:36px;height:36px;border-width:3px}
-@media(max-width:520px){.sgrid{grid-template-columns:1fr 1fr}.container{padding:16px 14px}}
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --border2: #cbd5e1;
+  --ink: #0f172a;
+  --ink2: #475569;
+  --ink3: #94a3b8;
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --abg: #e0e7ff;
+  --green: #10b981;
+  --gbg: #d1fae5;
+  --gb: #6ee7b7;
+  --red: #ef4444;
+  --rbg: #fee2e2;
+  --rb: #fca5a5;
+  --amber: #f59e0b;
+  --ambg: #fef3c7;
+  --r: 16px;
+  --rs: 8px;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,.05), 0 2px 4px -1px rgba(0,0,0,.03);
+  --shadow-hover: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -2px rgba(0,0,0,.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; line-height: 1.5; }
+.page { display: none; animation: fadeIn 0.3s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+.login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--bg); }
+.login-card { background: var(--surface); padding: 48px 40px; border-radius: var(--r); box-shadow: var(--shadow-hover); width: 100%; max-width: 440px; border: 1px solid var(--border); }
+.divider-text { display: flex; align-items: center; text-align: center; color: var(--ink3); font-size: 13px; font-weight: 500; margin: 24px 0; }
+.divider-text::before, .divider-text::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
+.divider-text:not(:empty)::before { margin-right: 12px; }
+.divider-text:not(:empty)::after { margin-left: 12px; }
+
+.topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 2px 0 rgba(0,0,0,.05); }
+.logo { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; letter-spacing: -0.02em; }
+.logo-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+
+.container { max-width: 800px; margin: 0 auto; padding: 32px 20px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px 28px; margin-bottom: 20px; box-shadow: var(--shadow); }
+.ctitle { font-size: 12px; font-weight: 700; color: var(--ink3); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 16px; }
+.stitle { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.01em; }
+.ssub { font-size: 15px; color: var(--ink2); margin-bottom: 24px; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 18px; font-size: 14px; font-weight: 500; border: 1px solid var(--border2); border-radius: var(--rs); background: var(--surface); color: var(--ink); cursor: pointer; transition: all .15s ease; white-space: nowrap; box-shadow: 0 1px 2px 0 rgba(0,0,0,.05); }
+.btn:hover { background: #f1f5f9; border-color: var(--ink3); }
+.btn:active { transform: translateY(1px); box-shadow: none; }
+.bprimary { background: var(--accent); color: #fff; border-color: transparent; box-shadow: 0 1px 3px 0 rgba(79,70,229,.4); }
+.bprimary:hover { background: var(--accent-hover); border-color: transparent; box-shadow: 0 4px 6px -1px rgba(79,70,229,.4); }
+.bsm { padding: 6px 14px; font-size: 13px; }
+.bgreen { background: var(--green); color: #fff; border-color: transparent; box-shadow: 0 1px 3px 0 rgba(16,185,129,.4); }
+.bgreen:hover { background: #059669; }
+.bdanger { background: var(--rbg); color: var(--red); border-color: var(--rb); box-shadow: none; }
+.bdanger:hover { background: #fecaca; }
+.bghost { background: transparent; border-color: transparent; color: var(--ink2); box-shadow: none; }
+.bghost:hover { background: var(--bg); border-color: transparent; color: var(--ink); }
+.btn:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; pointer-events: none; }
+
+input[type=text], input[type=password], textarea, select { width: 100%; padding: 12px 16px; border: 1px solid var(--border2); border-radius: var(--rs); font-size: 15px; font-family: inherit; background: var(--surface); color: var(--ink); outline: none; transition: all .2s; box-shadow: 0 1px 2px 0 rgba(0,0,0,.05) inset; }
+input[type=text]:focus, input[type=password]:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,70,229,.15); }
+textarea { resize: vertical; line-height: 1.5; }
+label { display: block; font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
+.field { margin-bottom: 20px; }
+
+.uzone { border: 2px dashed var(--border2); border-radius: var(--r); padding: 48px 20px; text-align: center; cursor: pointer; transition: all .2s ease; position: relative; background: #f8fafc; }
+.uzone:hover, .uzone.drag { border-color: var(--accent); background: var(--abg); }
+.uzone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.uzone .uicon { font-size: 40px; margin-bottom: 16px; opacity: .8; }
+.uzone .utitle { font-size: 16px; font-weight: 600; color: var(--ink); }
+.uzone p { font-size: 14px; color: var(--ink2); margin-top: 8px; }
+.imgprev { max-width: 100%; max-height: 240px; border-radius: var(--rs); border: 1px solid var(--border); display: block; margin: 16px 0; object-fit: contain; background: #fff; }
+
+.badge { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: .02em; }
+.bblue { background: var(--abg); color: var(--accent-hover); }
+.bgreen2 { background: var(--gbg); color: #047857; }
+.codebox { display: flex; align-items: center; gap: 8px; background: #f1f5f9; border: 1px solid var(--border); border-radius: var(--rs); padding: 12px 16px; font-family: monospace; font-size: 14px; flex-wrap: wrap; }
+.codeval { font-weight: 600; color: var(--accent); flex: 1; word-break: break-all; }
+.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+.alert { padding: 14px 18px; border-radius: var(--rs); font-size: 14px; line-height: 1.5; display: flex; align-items: center; gap: 8px; }
+.agreen { background: var(--gbg); color: #064e3b; border: 1px solid var(--gb); }
+.ared { background: var(--rbg); color: #7f1d1d; border: 1px solid var(--rb); }
+.ablue { background: var(--abg); color: #1e3a8a; border: 1px solid #bfdbfe; }
+.aamber { background: var(--ambg); color: #713f12; border: 1px solid #fde68a; }
+
+.spin { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.hidden { display: none !important; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+.qcard { border: 1px solid var(--border); border-radius: var(--rs); overflow: hidden; margin-bottom: 16px; background: var(--surface); box-shadow: 0 1px 2px rgba(0,0,0,.02); transition: border-color .2s; }
+.qcard:focus-within { border-color: var(--border2); }
+.qhead { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid var(--border); }
+.qnum { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; box-shadow: 0 2px 4px rgba(79,70,229,.2); }
+.qbody { padding: 20px 16px; }
+.qf { margin-bottom: 16px; }
+.qf label { font-size: 13px; font-weight: 600; color: var(--ink2); margin-bottom: 6px; }
+.qf input[type=text] { padding: 10px 14px; font-size: 14px; }
+.optrow { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.optrow input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; }
+.ansbox { background: var(--gbg); border: 1px dashed var(--gb); border-radius: var(--rs); padding: 16px; margin-top: 8px; }
+.ansbox label { color: #047857; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.ansbox input[type=text] { border-color: var(--gb); box-shadow: none; }
+.ansbox input[type=text]:focus { border-color: #059669; box-shadow: 0 0 0 3px rgba(16,185,129,.15); }
+
+.trow { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--surface); border-radius: var(--rs); border: 1px solid var(--border); margin-bottom: 12px; transition: all .2s; box-shadow: 0 1px 2px rgba(0,0,0,.02); }
+.trow:hover { border-color: var(--border2); box-shadow: var(--shadow); transform: translateY(-1px); }
+.tname { font-size: 16px; font-weight: 600; flex: 1; color: var(--ink); margin-bottom: 4px; }
+.tmeta { font-size: 13px; color: var(--ink3); }
+
+.sgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+.scard { background: #f8fafc; border: 1px solid var(--border); border-radius: var(--rs); padding: 20px; text-align: center; }
+.snum { font-size: 32px; font-weight: 700; color: var(--ink); }
+.slabel { font-size: 13px; font-weight: 500; color: var(--ink2); margin-top: 4px; }
+
+.qstud { background: var(--surface); border: 1px solid var(--border); border-radius: var(--rs); padding: 24px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.04); transition: border-color .3s ease; }
+.qnum2 { font-size: 12px; font-weight: 700; color: var(--ink3); text-transform: uppercase; margin-bottom: 12px; letter-spacing: .05em; }
+.qtext { font-size: 17px; font-weight: 500; line-height: 1.6; margin-bottom: 20px; color: var(--ink); }
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.obtn { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 2px solid var(--border); border-radius: var(--rs); background: var(--surface); cursor: pointer; font-size: 15px; font-weight: 500; color: var(--ink); transition: all .15s ease; text-align: left; width: 100%; box-shadow: 0 1px 2px rgba(0,0,0,.01); }
+.obtn:hover { border-color: var(--border2); background: #f8fafc; }
+.obtn.sel { border-color: var(--accent); background: var(--abg); color: var(--accent-hover); box-shadow: 0 2px 4px rgba(79,70,229,.1); }
+.obtn.ok { border-color: var(--green); background: var(--gbg); color: #064e3b; }
+.obtn.bad { border-color: var(--red); background: var(--rbg); color: #7f1d1d; }
+.obtn:disabled { cursor: default; transform: none; }
+.oletter { width: 26px; height: 26px; border-radius: 50%; border: 2px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; opacity: .7; background: #fff; }
+.obtn.sel .oletter { opacity: 1; background: var(--accent); color: #fff; border-color: var(--accent); }
+.obtn.ok .oletter { background: var(--green); border-color: var(--green); color: #fff; opacity: 1; }
+.obtn.bad .oletter { background: var(--red); border-color: var(--red); color: #fff; opacity: 1; }
+
+.gapwrap { font-size: 17px; line-height: 2.8; font-weight: 400; }
+/* input.gapinp — specificity (0,1,1) overrides input[type=text] (0,1,1) by source order */
+input.gapinp { display: inline-block; width: auto; border: none; border-bottom: 2px dashed var(--border2); background: #f8fafc; font-size: 16px; padding: 4px 8px; margin: 0 4px; min-width: 80px; max-width: 200px; color: var(--accent); font-weight: 600; outline: none; text-align: center; border-radius: 4px 4px 0 0; box-shadow: none; transition: all .2s; }
+input.gapinp:focus { border-bottom-color: var(--accent); border-bottom-style: solid; background: var(--abg); box-shadow: none; }
+input.gapinp.ok { border-bottom-color: var(--green); border-bottom-style: solid; background: var(--gbg); color: #047857; }
+input.gapinp.bad { border-bottom-color: var(--red); border-bottom-style: solid; background: var(--rbg); color: #b91c1c; text-decoration: line-through; }
+
+.rbar { height: 10px; background: var(--border); border-radius: 6px; overflow: hidden; margin-top: 12px; }
+.rfill { height: 100%; border-radius: 6px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+.rtable { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; margin-top: 10px; border: 1px solid var(--border); border-radius: var(--rs); overflow: hidden; }
+.rtable th { text-align: left; font-size: 12px; font-weight: 600; color: var(--ink2); text-transform: uppercase; letter-spacing: .05em; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid var(--border); }
+.rtable td { padding: 14px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; background: var(--surface); }
+.rtable tr:last-child td { border-bottom: none; }
+.mbar { display: flex; align-items: center; gap: 12px; }
+.mtrack { flex: 1; height: 6px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+.mfill { height: 100%; border-radius: 4px; transition: width .5s ease; }
+.av { width: 32px; height: 32px; border-radius: 50%; background: var(--abg); color: var(--accent-hover); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; border: 1px solid rgba(79,70,229,.1); }
+
+.rrow-main { cursor: pointer; transition: background .15s; }
+.rrow-main:hover td { background: #f8fafc; }
+.rrow-detail { display: none; background: #f8fafc; }
+.rrow-detail.open { display: table-row; }
+.detail-wrap { padding: 16px; display: flex; flex-direction: column; gap: 8px; border-top: 1px dashed var(--border); background: #f8fafc; }
+.ditem { display: flex; align-items: flex-start; gap: 12px; padding: 10px 14px; border-radius: var(--rs); font-size: 14px; background: var(--surface); border: 1px solid var(--border); }
+.ditem.dok { border-color: var(--gb); background: var(--gbg); }
+.ditem.derr { border-color: var(--rb); background: var(--rbg); }
+.dicon { font-size: 16px; flex-shrink: 0; line-height: 1.4; font-weight: 700; }
+.ditem.dok .dicon { color: #047857; }
+.ditem.derr .dicon { color: #b91c1c; }
+.dlabel { flex: 1; color: var(--ink); font-weight: 500; line-height: 1.5; min-width: 0; word-break: break-word; }
+.dans { font-size: 14px; font-weight: 600; color: var(--ink); text-align: right; flex-shrink: 0; padding-left: 12px; line-height: 1.5; }
+.dcorr { font-size: 12px; color: #047857; margin-top: 4px; font-weight: 600; }
+.dtoggle { font-size: 12px; font-weight: 600; color: var(--ink2); cursor: pointer; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); line-height: 1; white-space: nowrap; transition: all .15s; }
+.dtoggle:hover { background: #e2e8f0; color: var(--ink); }
+
+.att-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+.att-block { border: 1px solid var(--border); border-radius: var(--rs); padding: 16px; background: #f8fafc; transition: border-color .2s; }
+.att-block:hover { border-color: var(--border2); }
+.att-block-label { font-size: 13px; font-weight: 600; color: var(--ink2); margin-bottom: 12px; }
+.att-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 16px; font-size: 13px; font-weight: 500; border: 1px dashed var(--ink3); border-radius: var(--rs); background: var(--surface); color: var(--ink2); cursor: pointer; position: relative; overflow: hidden; transition: all .2s; }
+.att-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--abg); }
+.att-btn input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.att-img-prev { max-width: 100%; max-height: 120px; border-radius: 6px; display: block; margin-top: 12px; border: 1px solid var(--border); object-fit: contain; background: #fff; }
+.att-audio { width: 100%; margin-top: 12px; height: 36px; border-radius: 20px; }
+.stud-att { margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px; background: #f8fafc; padding: 16px; border-radius: var(--rs); border: 1px solid var(--border); }
+.stud-att img { max-width: 100%; border-radius: 6px; border: 1px solid var(--border); }
+
+.overlay { position: fixed; inset: 0; background: rgba(255,255,255,.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; gap: 16px; backdrop-filter: blur(4px); }
+.overlay p { font-size: 15px; font-weight: 500; color: var(--ink); }
+.bspin { width: 48px; height: 48px; border-width: 3px; border-top-color: var(--accent); }
+
+@media(max-width: 600px) {
+  .sgrid { grid-template-columns: 1fr; gap: 12px; }
+  .container { padding: 20px 16px; }
+  .att-grid { grid-template-columns: 1fr; }
+  .rtable th, .rtable td { padding: 10px; }
+  .mbar { flex-direction: column; align-items: flex-start; gap: 4px; }
+}
 </style>
 </head>
 <body>
 
-<div class="keybar">
-  <span>🔑 Ключ:</span>
-  <input type="text" id="api-key" placeholder="Вставьте X-Client-Key">
-  <button class="btn bsm bprimary" onclick="applyKey()">Сохранить</button>
-  <span id="key-status" style="font-size:12px"></span>
-</div>
-<div class="topbar">
+<div class="topbar hidden" id="topbar">
   <div class="logo"><div class="logo-dot"></div>TaskBoard</div>
-  <div id="tbr" style="display:flex;gap:8px"></div>
+  <div id="tbr" style="display:flex;gap:12px"></div>
 </div>
+
 <div class="overlay hidden" id="overlay"><div class="spin bspin"></div><p id="ovmsg">Загружаю...</p></div>
 
+<!-- ========== LOGIN ========== -->
+<div class="page" id="page-login">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="logo" style="justify-content:center;margin-bottom:24px;font-size:24px;">
+        <div class="logo-dot" style="width:14px;height:14px;"></div>TaskBoard
+      </div>
+      <h2 style="text-align:center;margin-bottom:8px;font-size:22px;">Вход для учителя</h2>
+      <p style="text-align:center;color:var(--ink2);margin-bottom:32px;font-size:15px;">Создавайте интерактивные задания и отслеживайте результаты</p>
+      <div>
+        <input type="text" id="api-key-login" placeholder="Вставьте X-Client-Key" style="margin-bottom:16px;text-align:center;background:#f8fafc;">
+        <button class="btn bprimary" style="width:100%;justify-content:center;padding:12px 16px;font-size:15px;" onclick="loginWithKey()">Войти</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ========== TEACHER ========== -->
-<div class="page active" id="page-teacher">
+<div class="page" id="page-teacher">
 <div class="container">
-  <div style="margin-bottom:24px">
+  <div style="margin-bottom:32px">
     <div class="stitle">Кабинет учителя</div>
     <div class="ssub">Загрузите фото или создайте задание вручную</div>
   </div>
 
-  <!-- upload -->
   <div class="card" id="s-upload">
     <div class="ctitle">Шаг 1 — Загрузить фото</div>
-    <div class="uzone" id="uzone" ondragover="event.preventDefault();this.classList.add(&#39;drag&#39;)" ondragleave="this.classList.remove(&#39;drag&#39;)" ondrop="handleDrop(event)">
+    <div class="uzone" id="uzone" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
       <input type="file" accept="image/*" id="finput" onchange="handleFile(event)">
       <div class="uicon">📷</div>
       <div class="utitle">Перетащите фото или нажмите</div>
-      <p>JPG, PNG, WEBP — учебник, тетрадь, распечатка</p>
+      <p>JPG, PNG, WEBP · или вставьте из буфера <kbd style="background:#fff;border:1px solid var(--border2);border-radius:6px;padding:2px 6px;font-size:12px;font-family:monospace;box-shadow:0 1px 1px rgba(0,0,0,.1)">Ctrl+V</kbd></p>
     </div>
     <div id="imgarea" class="hidden">
-      <img id="imgprev" class="imgprev" src="https://api.aiaistudio.org/taskboard" alt="">
-      <div class="field" style="margin-top:12px">
+      <img id="imgprev" class="imgprev" src="" alt="">
+      <div class="field" style="margin-top:20px">
         <label>Тип задания</label>
         <select id="ttype">
-          <option value="fill_gaps">Заполни пропуски</option>
+          <option value="fill_gaps">Ввести/заполнить пропуск</option>
           <option value="multiple_choice">Множественный выбор</option>
-          <option value="true_false">Верно / Неверно</option>
-          <option value="order_words">Составь предложение</option>
           <option value="open_answer">Открытый ответ</option>
         </select>
       </div>
@@ -164,119 +260,134 @@ label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bott
         <input type="text" id="tctx" placeholder="5 класс, Present Perfect">
       </div>
       <div class="row">
-        <button class="btn bprimary" onclick="analyzeImage()">Распознать задание</button>
+        <button class="btn bprimary" onclick="analyzeImage()">✨ Распознать задание</button>
         <button class="btn" onclick="resetUpload()">Другое фото</button>
-        <button class="btn" onclick="openManual()">✏️ Создать вручную</button>
       </div>
     </div>
-    <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:12px">
-      <button class="btn" style="width:100%;justify-content:center" onclick="openManual()">✏️ Создать задание вручную (без фото)</button>
+    <div style="margin-top:24px;border-top:1px solid var(--border);padding-top:24px">
+      <button class="btn bghost" style="width:100%;justify-content:center;border:1px dashed var(--border2)" onclick="openManual()">✏️ Создать задание вручную (без фото)</button>
     </div>
   </div>
 
-  <!-- EDITOR -->
   <div class="card hidden" id="s-edit">
     <div class="ctitle">Редактор задания</div>
     <div class="field">
       <label>Название задания</label>
-      <input type="text" id="tname" placeholder="Present Perfect — упр. 3">
+      <input type="text" id="tname" placeholder="Например: Present Perfect — упр. 3">
     </div>
     <div class="field">
       <label>Тип упражнения</label>
       <select id="etype" onchange="rebuildEditor()">
-        <option value="fill_gaps">Заполни пропуски (___)</option>
+        <option value="fill_gaps">Ввести/заполнить пропуск (___)</option>
         <option value="multiple_choice">Множественный выбор</option>
-        <option value="true_false">Верно / Неверно</option>
-        <option value="order_words">Составь предложение из слов</option>
         <option value="open_answer">Открытый ответ</option>
       </select>
     </div>
+    <div class="field">
+      <label>Дополнительные материалы <span style="color:var(--ink3);font-weight:400">(необязательно)</span></label>
+      <div class="att-grid">
+        <div class="att-block">
+          <div class="att-block-label">🖼 Изображение</div>
+          <label class="att-btn">📁 Выбрать файл<input type="file" accept="image/*" onchange="loadAttachmentFile('img',this)"></label>
+          <img id="att-img-prev" class="att-img-prev hidden" alt="">
+          <button id="att-img-rm" class="btn bsm bdanger hidden" style="margin-top:12px;width:100%" onclick="rmAtt('img')">✕ Убрать</button>
+        </div>
+        <div class="att-block">
+          <div class="att-block-label">🔊 Аудио</div>
+          <label class="att-btn">📁 Выбрать файл<input type="file" accept="audio/*" onchange="loadAttachmentFile('aud',this)"></label>
+          <audio id="att-aud-prev" controls class="att-audio hidden"></audio>
+          <button id="att-aud-rm" class="btn bsm bdanger hidden" style="margin-top:12px;width:100%" onclick="rmAtt('aud')">✕ Убрать</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
     <div id="qeditor"></div>
-    <div class="row" style="margin-top:4px">
-      <button class="btn bsm" onclick="addQ()">+ Добавить вопрос</button>
+
+    <div class="row" style="margin-top:16px">
+      <button class="btn bsm" style="border:1px dashed var(--border2);" onclick="addQ()">+ Добавить вопрос</button>
     </div>
     <div class="divider"></div>
-    <div id="eerr" class="alert ared hidden" style="margin-bottom:12px"></div>
+    <div id="eerr" class="alert ared hidden" style="margin-bottom:20px"></div>
     <div class="row">
-      <button class="btn bgreen" onclick="publishTask()">Опубликовать и получить ссылку →</button>
-      <button class="btn" onclick="resetUpload()">Сначала</button>
+      <button class="btn bgreen" style="padding:12px 24px;font-size:15px;" onclick="publishTask()">Опубликовать и получить ссылку →</button>
+      <button class="btn" onclick="resetUpload()">Начать заново</button>
     </div>
   </div>
 
-  <!-- LINK -->
   <div class="card hidden" id="s-link">
     <div class="ctitle">Ссылка для ученика</div>
-    <div class="alert agreen" style="margin-bottom:16px">✓ Задание опубликовано!</div>
+    <div class="alert agreen" style="margin-bottom:24px">✓ Задание успешно опубликовано!</div>
     <div class="field">
       <label>Ссылка (отправьте ученику)</label>
       <div class="codebox"><span class="codeval" id="surl"></span><button class="btn bsm" onclick="copyUrl()">Копировать</button></div>
     </div>
-    <div class="field">
-      <label>ID задания</label>
-      <div class="codebox"><span class="codeval" id="scode" style="font-size:12px"></span></div>
-    </div>
     <div class="divider"></div>
     <div class="row">
-      <button class="btn bprimary" onclick="viewResults()">Результаты</button>
-      <button class="btn" onclick="newTask()">Новое задание</button>
+      <button class="btn bprimary" onclick="viewResults()">📊 Посмотреть результаты</button>
+      <button class="btn" onclick="newTask()">+ Новое задание</button>
     </div>
   </div>
 
-  <!-- RESULTS -->
   <div class="card hidden" id="s-results">
     <div class="ctitle">Результаты</div>
     <div class="field">
-      <select id="rsel" onchange="loadResults(this.value)"><option value="">— выберите задание —</option></select>
+      <select id="rsel" onchange="loadResults(this.value)"><option value="">— Выберите задание —</option></select>
     </div>
     <div id="rbody" class="hidden">
       <div class="sgrid">
         <div class="scard"><div class="snum" id="st-t">0</div><div class="slabel">Учеников</div></div>
-        <div class="scard"><div class="snum" id="st-d">0</div><div class="slabel">Ответили</div></div>
-        <div class="scard"><div class="snum" id="st-a">—</div><div class="slabel">Средний балл</div></div>
+        <div class="scard"><div class="snum" id="st-d">0</div><div class="slabel">Сдали</div></div>
+        <div class="scard"><div class="snum" id="st-a" style="color:var(--accent)">—</div><div class="slabel">Средний балл</div></div>
       </div>
       <div id="rtw"></div>
     </div>
-    <div id="remp" class="alert ablue hidden">Пока нет ответов.</div>
+    <div id="remp" class="alert ablue hidden" style="margin-top:16px">Пока нет ответов для этого задания.</div>
   </div>
 
-  <!-- TASK LIST -->
   <div class="card" id="tlist-card">
     <div class="ctitle">Все задания</div>
-    <div id="tlist"><div style="font-size:13px;color:var(--ink3);text-align:center;padding:20px 0">Заданий пока нет.</div></div>
+    <div id="tlist"><div style="font-size:14px;color:var(--ink3);text-align:center;padding:32px 0">Заданий пока нет.</div></div>
   </div>
 </div>
 </div>
 
 <!-- ========== STUDENT ========== -->
 <div class="page" id="page-student">
-<div class="container">
-  <div class="card" id="st-enter">
-    <div class="stitle" style="margin-bottom:6px">Открыть задание</div>
-    <div class="ssub">Вставьте ID задания от учителя</div>
-    <div class="row" style="margin-bottom:12px">
-      <input type="text" id="cinput" placeholder="Вставьте ID задания" style="flex:1;font-size:12px;font-family:monospace">
+<div class="container" style="max-width:700px">
+  <div class="card" id="st-enter" style="text-align:center;padding:32px 24px">
+    <div class="stitle" style="margin-bottom:12px;font-size:24px">Открыть задание</div>
+    <div class="ssub">Вставьте ссылку или код, который вам дал учитель</div>
+    <div class="row" style="margin-bottom:16px;max-width:400px;margin-left:auto;margin-right:auto;flex-wrap:nowrap">
+      <input type="text" id="cinput" placeholder="Вставьте ссылку или код..." style="flex:1;font-size:15px;font-family:monospace;text-align:center">
       <button class="btn bprimary" onclick="openByCode()">Открыть</button>
     </div>
-    <div id="cerr" class="alert ared hidden"></div>
+    <div id="cerr" class="alert ared hidden" style="max-width:400px;margin:0 auto"></div>
   </div>
-  <div class="card hidden" id="st-name">
-    <div class="ctitle" id="snlabel">Задание</div>
-    <div class="field"><label>Ваше имя</label><input type="text" id="sname" placeholder="Имя и фамилия"></div>
-    <button class="btn bprimary" onclick="startTask()">Начать</button>
+
+  <div class="card hidden" id="st-name" style="text-align:center;padding:32px 24px">
+    <div class="ctitle" id="snlabel" style="font-size:14px;color:var(--accent);margin-bottom:24px">Задание</div>
+    <div class="field" style="max-width:320px;margin:0 auto 24px auto;text-align:left">
+      <label>Как вас зовут?</label>
+      <input type="text" id="sname" placeholder="Имя и фамилия">
+    </div>
+    <button class="btn bprimary" style="padding:12px 32px;font-size:16px" onclick="startTask()">Начать выполнение</button>
   </div>
+
   <div class="hidden" id="st-body">
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div class="card" style="padding:32px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:20px">
         <div>
-          <div style="font-size:17px;font-weight:600" id="ttitle"></div>
-          <div style="font-size:13px;color:var(--ink2);margin-top:2px" id="tsub"></div>
+          <div style="font-size:20px;font-weight:700;letter-spacing:-0.01em;color:var(--ink)" id="ttitle"></div>
+          <div style="font-size:14px;color:var(--ink2);margin-top:6px" id="tsub"></div>
         </div>
-        <span class="badge bblue" id="tbadge">В процессе</span>
+        <span class="badge bblue" id="tbadge" style="padding:6px 14px;font-size:13px">В процессе</span>
       </div>
+      <div id="stud-att" class="hidden stud-att"></div>
       <div id="qarea"></div>
       <div class="divider"></div>
-      <div class="row" id="crow"><button class="btn bprimary" onclick="checkAnswers()">Проверить</button></div>
-      <div class="hidden" id="rblock" style="margin-top:16px"></div>
+      <div class="row" id="crow"><button class="btn bprimary" style="padding:14px 32px;font-size:16px;width:100%;justify-content:center" onclick="checkAnswers()">Завершить и проверить</button></div>
+      <div class="hidden" id="rblock" style="margin-top:24px"></div>
     </div>
   </div>
 </div>
@@ -287,13 +398,16 @@ const API = 'https://api.aiaistudio.org';
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let curTaskId = null;
-let studTask = null;
+let studTask = null;       // schema_json of the loaded task
 let studTaskId = null;
+let studTaskMedia = { img: null, aud: null }; // image_url / audio_url from wrapper
 let studAns = {};
 let eqArr = [];
 let dashboardTasks = [];
+let directLink = false;
+let taskAttachments = { img: null, aud: null }; // File objects for upload
 
-// ── Storage helpers (localStorage + cookie fallback) ─────────────────────────
+// ── Storage helpers ──────────────────────────────────────────────────────────
 function lsSet(k, v) {
   try { localStorage.setItem(k, v); } catch(e) {}
   document.cookie = k + '=' + encodeURIComponent(v) + ';max-age=31536000;path=/;SameSite=Lax';
@@ -305,41 +419,49 @@ function lsGet(k) {
 }
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
-function getKey() { return document.getElementById('api-key').value.trim(); }
+function getKey() { return lsGet('tb_key'); }
 
-async function applyKey() {
-  const key = document.getElementById('api-key').value.trim();
-  if (!key) { setKeyStatus('Введите ключ', false); return; }
-  lsSet('tb_key', key);
-  console.log('[TB] key saved, readback:', lsGet('tb_key') ? 'ok' : 'FAILED');
-  setKeyStatus('Сохранён ✓', true);
-  await loadDashboardTasks();
+function loginWithKey() {
+  const k = document.getElementById('api-key-login').value.trim();
+  if (!k) return alert('Пожалуйста, введите ключ');
+  lsSet('tb_key', k);
+  document.getElementById('api-key-login').value = '';
+  showPage('teacher');
+  loadDashboardTasks();
 }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.activeElement.id === 'api-key') applyKey();
+function logout() {
+  lsSet('tb_key', '');
+  showPage('login');
+}
+
+document.getElementById('api-key-login').addEventListener('keydown', e => {
+  if (e.key === 'Enter') loginWithKey();
 });
-
-function setKeyStatus(msg, ok) {
-  const el = document.getElementById('key-status');
-  el.textContent = msg;
-  el.style.color = ok ? 'var(--green)' : 'var(--red)';
-}
 
 // ── Pages ─────────────────────────────────────────────────────────────────────
 function showPage(n) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + n).classList.add('active');
-  document.getElementById('tbr').innerHTML = n === 'student'
-    ? '<button class="btn bsm" onclick="showPage(\'teacher\')">← Учитель</button>'
-    : '';
-  document.querySelector('.keybar').style.display = n === 'student' ? 'none' : '';
+
+  const topbar = document.getElementById('topbar');
+  topbar.classList.toggle('hidden', n === 'login');
+
+  const tbr = document.getElementById('tbr');
+  if (n === 'student' && !directLink) {
+    tbr.innerHTML = `<button class="btn bsm" onclick="showPage('teacher')">← Вернуться к учителю</button>`;
+  } else if (n === 'teacher') {
+    tbr.innerHTML = `<button class="btn bghost bsm" style="border:1px solid var(--border)" onclick="logout()">Выйти</button>`;
+  } else {
+    tbr.innerHTML = '';
+  }
 }
 
 function routeHash() {
   const h = location.hash;
   if (h.startsWith('#task/')) {
     const id = h.replace('#task/', '').trim();
+    directLink = true;
     showPage('student');
     document.getElementById('cinput').value = id;
     openByCode();
@@ -367,7 +489,26 @@ function readImg(file) {
   r.readAsDataURL(file);
 }
 
-// ── Generate (stub, AI WIP) ───────────────────────────────────────────────────
+document.addEventListener('paste', function(e) {
+  if (!document.getElementById('page-teacher').classList.contains('active')) return;
+  if (document.getElementById('s-upload').classList.contains('hidden')) return;
+  const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+  for (const item of items) {
+    if (item.type.startsWith('image/')) {
+      e.preventDefault();
+      const file = item.getAsFile();
+      if (file) {
+        const uzone = document.getElementById('uzone');
+        uzone.classList.add('drag');
+        setTimeout(() => uzone.classList.remove('drag'), 400);
+        readImg(file);
+      }
+      break;
+    }
+  }
+});
+
+// ── Generate ──────────────────────────────────────────────────────────────────
 async function analyzeImage() {
   const fd = new FormData();
   fd.append('type', document.getElementById('ttype').value || 'fill_gaps');
@@ -375,9 +516,10 @@ async function analyzeImage() {
   if (ctx) fd.append('prompt', ctx);
   if (upFile) fd.append('image', upFile);
 
-  showOv('Генерирую задание...');
+  showOv('Изучаю изображение и генерирую задание...');
   try {
     const res = await fetch(`${API}/api/v1/tasks/generate`, { method: 'POST', headers: { 'X-Client-Key': getKey() }, body: fd });
+    if (res.status === 401) { logout(); throw new Error('Сессия устарела. Пожалуйста, войдите снова.'); }
     if (!res.ok) throw new Error('Ошибка сервера: ' + res.status);
     const schema = await res.json();
     loadEditor(schema);
@@ -389,6 +531,8 @@ async function analyzeImage() {
 }
 
 function openManual() {
+  taskAttachments = { img: null, aud: null };
+  resetAttUI();
   loadEditor({ name: '', type: 'fill_gaps', questions: [{ id: 1, text: '', answer: '', options: ['', '', '', ''], words: [] }] });
 }
 
@@ -415,19 +559,17 @@ function syncEditor() {
   eqArr.forEach((q, i) => {
     const b = 'q' + i;
     const te = document.getElementById(b + '-t'); if (te) q.text = te.value;
-    if (tp === 'fill_gaps' || tp === 'open_answer' || tp === 'order_words') {
+    if (tp === 'fill_gaps' || tp === 'open_answer') {
       const ae = document.getElementById(b + '-a'); if (ae) q.answer = ae.value;
     }
     if (tp === 'multiple_choice') {
       q.options = []; let j = 0;
       while (true) { const e = document.getElementById(b + '-o' + j); if (!e) break; q.options.push(e.value); j++; }
-      document.querySelectorAll(`input[name="${b}-r"]`).forEach((r, ri) => { if (r.checked) q.answer = q.options[ri] || ''; });
-    }
-    if (tp === 'true_false') {
-      document.querySelectorAll(`input[name="${b}-r"]`).forEach(r => { if (r.checked) q.answer = r.value; });
-    }
-    if (tp === 'order_words') {
-      const we = document.getElementById(b + '-w'); if (we) q.words = we.value.split(',').map(s => s.trim()).filter(Boolean);
+      const checkedOpts = [];
+      document.querySelectorAll(`input[name="${b}-r"]:checked`).forEach(r => {
+        const v = q.options[parseInt(r.value)]; if (v !== undefined) checkedOpts.push(v);
+      });
+      q.answer = checkedOpts.join(',');
     }
   });
 }
@@ -439,30 +581,23 @@ function renderEditor() {
   eqArr.forEach((q, i) => {
     const b = 'q' + i, div = document.createElement('div');
     div.className = 'qcard'; div.dataset.i = i;
-    const tph = tp === 'fill_gaps' ? 'She ___ (visit) Paris. Используйте ___ для пропусков' : tp === 'order_words' ? 'Описание (необязательно)' : 'Текст вопроса';
+    const tph = tp === 'fill_gaps' ? 'She ___ (visit) Paris. Вставьте ___ для пропуска' : 'Текст вопроса';
     let body = `<div class="qf"><label>Текст вопроса</label><input type="text" id="${b}-t" value="${esc(q.text)}" placeholder="${tph}"></div>`;
 
     if (tp === 'multiple_choice') {
       const opts = q.options.length >= 2 ? q.options : ['', '', '', ''];
-      body += `<div class="qf"><label>Варианты <span style="color:var(--ink3);font-weight:400">(отметьте правильный)</span></label>`;
+      body += `<div class="qf"><label>Варианты <span style="color:var(--ink3);font-weight:400;font-size:12px">(отметьте правильные)</span></label>`;
+      const correctOpts = (q.answer || '').split(',').map(s => s.trim());
       opts.forEach((o, oi) => {
-        const ck = q.answer && q.answer === o ? 'checked' : '';
-        body += `<div class="optrow"><input type="radio" name="${b}-r" value="${oi}" ${ck}><input type="text" id="${b}-o${oi}" value="${esc(o)}" placeholder="Вариант ${oi + 1}"><button class="btn bghost bsm" onclick="rmOpt(${i},${oi})">✕</button></div>`;
+        const ck = correctOpts.includes(o) && o ? 'checked' : '';
+        body += `<div class="optrow"><input type="checkbox" name="${b}-r" value="${oi}" ${ck}><input type="text" id="${b}-o${oi}" value="${esc(o)}" placeholder="Вариант ${oi + 1}"><button class="btn bghost bsm" onclick="rmOpt(${i},${oi})">✕</button></div>`;
       });
-      body += `<button class="btn bsm" style="margin-top:6px" onclick="addOpt(${i})">+ Вариант</button></div>`;
-    } else if (tp === 'true_false') {
-      body += `<div class="qf"><label>Правильный ответ</label>
-        <div class="optrow"><input type="radio" name="${b}-r" value="true" ${q.answer === 'true' ? 'checked' : ''}><span style="font-size:14px;color:var(--green)">✓ Верно</span></div>
-        <div class="optrow"><input type="radio" name="${b}-r" value="false" ${q.answer === 'false' ? 'checked' : ''}><span style="font-size:14px;color:var(--red)">✗ Неверно</span></div>
-      </div>`;
-    } else if (tp === 'order_words') {
-      body += `<div class="qf wbox"><label>Слова для перестановки (через запятую)</label><input type="text" id="${b}-w" value="${esc((q.words || []).join(', '))}" placeholder="He, has, visited, Paris"></div>`;
-      body += `<div class="qf ansbox"><label>✓ Правильное предложение</label><input type="text" id="${b}-a" value="${esc(q.answer)}" placeholder="He has visited Paris"></div>`;
+      body += `<button class="btn bsm" style="margin-top:8px;border-style:dashed" onclick="addOpt(${i})">+ Добавить вариант</button></div>`;
     } else {
-      body += `<div class="qf ansbox"><label>✓ ${tp === 'fill_gaps' ? 'Правильный ответ (через запятую если несколько пропусков)' : 'Эталонный ответ'}</label><input type="text" id="${b}-a" value="${esc(q.answer)}" placeholder="${tp === 'fill_gaps' ? 'has visited' : 'Правильный ответ'}"></div>`;
+      body += `<div class="qf ansbox"><label>✓ ${tp === 'fill_gaps' ? 'Ответы через запятую если несколько пропусков: green,yellow. Варианты одного пропуска через |: isn\'t|is not' : 'Эталонный ответ (необязательно)'}</label><input type="text" id="${b}-a" value="${esc(q.answer)}" placeholder="${tp === 'fill_gaps' ? 'has visited | have visited' : 'Правильный ответ'}"></div>`;
     }
 
-    div.innerHTML = `<div class="qhead"><div class="qnum">${i + 1}</div><span style="font-size:13px;font-weight:500;flex:1;color:var(--ink2)">Вопрос ${i + 1}</span><button class="btn bghost bsm" onclick="moveQ(${i},-1)">↑</button><button class="btn bghost bsm" onclick="moveQ(${i},1)">↓</button><button class="btn bdanger bsm" onclick="rmQ(${i})">Удалить</button></div><div class="qbody">${body}</div>`;
+    div.innerHTML = `<div class="qhead"><div class="qnum">${i + 1}</div><span style="font-size:14px;font-weight:600;flex:1;color:var(--ink)">Вопрос ${i + 1}</span><button class="btn bghost bsm" onclick="moveQ(${i},-1)">↑</button><button class="btn bghost bsm" onclick="moveQ(${i},1)">↓</button><button class="btn bdanger bsm" onclick="rmQ(${i})">Удалить</button></div><div class="qbody">${body}</div>`;
     c.appendChild(div);
   });
 }
@@ -486,59 +621,94 @@ function addOpt(qi) { syncEditor(); if (!eqArr[qi].options) eqArr[qi].options = 
 function rmOpt(qi, oi) { syncEditor(); if (eqArr[qi].options.length <= 2) { alert('Минимум 2 варианта'); return; } eqArr[qi].options.splice(oi, 1); renderEditor(); }
 function esc(s) { return String(s || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 
+// ── Attachments ───────────────────────────────────────────────────────────────
+function loadAttachmentFile(type, input) {
+  const file = input.files[0]; if (!file) return;
+  taskAttachments[type] = file; // File object for FormData upload
+  if (type === 'img') {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const prev = document.getElementById('att-img-prev');
+      prev.src = e.target.result; prev.classList.remove('hidden');
+      document.getElementById('att-img-rm').classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+  } else {
+    const aud = document.getElementById('att-aud-prev');
+    if (aud.src.startsWith('blob:')) URL.revokeObjectURL(aud.src);
+    aud.src = URL.createObjectURL(file);
+    aud.classList.remove('hidden');
+    document.getElementById('att-aud-rm').classList.remove('hidden');
+  }
+}
+
+function rmAtt(type) {
+  taskAttachments[type] = null;
+  if (type === 'img') {
+    document.getElementById('att-img-prev').classList.add('hidden');
+    document.getElementById('att-img-rm').classList.add('hidden');
+  } else {
+    const aud = document.getElementById('att-aud-prev');
+    if (aud.src.startsWith('blob:')) URL.revokeObjectURL(aud.src);
+    aud.src = '';
+    aud.classList.add('hidden');
+    document.getElementById('att-aud-rm').classList.add('hidden');
+  }
+}
+
+function resetAttUI() {
+  ['att-img-prev', 'att-img-rm', 'att-aud-prev', 'att-aud-rm'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.classList.add('hidden');
+  });
+}
+
 // ── Publish ───────────────────────────────────────────────────────────────────
 async function publishTask() {
   syncEditor();
   const key = getKey();
-  if (!key) { alert('Нажмите «Получить ключ» или вставьте X-Client-Key вверху'); return; }
+  if (!key) { logout(); return; }
 
   const name = document.getElementById('tname').value.trim() || 'Задание';
   const tp = getEType();
   const ee = document.getElementById('eerr');
 
-  // Validation
   for (let i = 0; i < eqArr.length; i++) {
     const q = eqArr[i];
     if (tp === 'multiple_choice') {
       const rds = document.querySelectorAll(`input[name="q${i}-r"]`); let ch = false;
       rds.forEach(r => { if (r.checked) ch = true; });
       if (!ch) { ee.textContent = `Вопрос ${i + 1}: отметьте правильный вариант`; ee.classList.remove('hidden'); return; }
-    } else if (tp === 'true_false') {
-      const rds = document.querySelectorAll(`input[name="q${i}-r"]`); let ch = false;
-      rds.forEach(r => { if (r.checked) ch = true; });
-      if (!ch) { ee.textContent = `Вопрос ${i + 1}: выберите Верно или Неверно`; ee.classList.remove('hidden'); return; }
-    } else if (!q.answer) {
+    } else if (!q.answer && tp !== 'open_answer') {
       ee.textContent = `Вопрос ${i + 1}: укажите правильный ответ`; ee.classList.remove('hidden'); return;
     }
   }
   ee.classList.add('hidden');
 
-  // Finalize radio answers
-  if (tp === 'multiple_choice') {
-    eqArr.forEach((q, i) => { document.querySelectorAll(`input[name="q${i}-r"]`).forEach((r, ri) => { if (r.checked) q.answer = q.options[ri] || ''; }); });
-  }
-  if (tp === 'true_false') {
-    eqArr.forEach((q, i) => { document.querySelectorAll(`input[name="q${i}-r"]`).forEach(r => { if (r.checked) q.answer = r.value; }); });
-  }
-
   const schema = { name, type: tp, questions: eqArr.map((q, i) => ({ ...q, id: i + 1 })) };
+
+  // Build multipart/form-data — browser sets Content-Type with boundary automatically
+  const form = new FormData();
+  form.append('title', name);
+  form.append('schema_json', JSON.stringify(schema));
+  if (taskAttachments.img) form.append('image', taskAttachments.img);
+  if (taskAttachments.aud) form.append('audio', taskAttachments.aud);
 
   showOv('Публикую задание...');
   try {
     const res = await fetch(`${API}/api/v1/tasks/publish`, {
       method: 'POST',
-      headers: { 'X-Client-Key': key, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: name, schema_json: schema })
+      headers: { 'X-Client-Key': key },
+      body: form
     });
-    if (res.status === 401) throw new Error('Неверный ключ. Нажмите «Получить ключ».');
-    if (!res.ok) { const e = await res.json(); throw new Error(e.error || 'Ошибка публикации'); }
+    if (res.status === 401) { logout(); throw new Error('Сессия устарела. Войдите снова.'); }
+    if (res.status === 413) throw new Error('Файл слишком большой (макс. 10 МБ)');
+    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || 'Ошибка публикации'); }
 
     const { task_id } = await res.json();
     curTaskId = task_id;
 
     const url = API + '/taskboard#task/' + task_id;
     document.getElementById('surl').textContent = url;
-    document.getElementById('scode').textContent = task_id;
     document.getElementById('s-link').classList.remove('hidden');
     document.getElementById('s-link').scrollIntoView({ behavior: 'smooth' });
 
@@ -559,6 +729,7 @@ function copyUrl() {
 function resetUpload() {
   ['imgarea', 's-edit', 's-link'].forEach(id => document.getElementById(id).classList.add('hidden'));
   document.getElementById('finput').value = ''; upFile = null; curTaskId = null;
+  taskAttachments = { img: null, aud: null }; resetAttUI();
 }
 function newTask() { resetUpload(); document.getElementById('s-results').classList.add('hidden'); }
 
@@ -568,6 +739,7 @@ async function loadDashboardTasks() {
   if (!key) return;
   try {
     const res = await fetch(`${API}/api/v1/dashboard/tasks`, { headers: { 'X-Client-Key': key } });
+    if (res.status === 401) { logout(); return; }
     if (!res.ok) return;
     dashboardTasks = await res.json();
     renderTList();
@@ -578,21 +750,22 @@ async function loadDashboardTasks() {
 function renderTList() {
   const el = document.getElementById('tlist');
   if (!dashboardTasks.length) {
-    el.innerHTML = '<div style="font-size:13px;color:var(--ink3);text-align:center;padding:20px 0">Заданий пока нет.</div>';
+    el.innerHTML = '<div style="font-size:14px;color:var(--ink3);text-align:center;padding:32px 0">Заданий пока нет.</div>';
     return;
   }
   el.innerHTML = [...dashboardTasks].reverse().map(t => {
     const cnt = t.answers ? t.answers.length : 0;
     const d = new Date(t.created_at).toLocaleDateString('ru');
-    const qCount = t.schema_json && t.schema_json.questions ? t.schema_json.questions.length : '?';
+    const tsch = typeof t.schema_json === 'string' ? JSON.parse(t.schema_json) : t.schema_json;
+    const qCount = tsch && tsch.questions ? tsch.questions.length : '?';
     return `<div class="trow">
       <div style="flex:1">
-        <div class="tname">${t.title}</div>
-        <div class="tmeta">${d} · ${qCount} вопр. · ${cnt} ответов</div>
+        <div class="tname">${eh(t.title)}</div>
+        <div class="tmeta">${d} · Вопросов: ${qCount} · Ответов: ${cnt}</div>
       </div>
-      <div class="row" style="gap:6px;flex-shrink:0">
+      <div class="row" style="gap:8px;flex-shrink:0">
         <button class="btn bsm bprimary" onclick="viewResults('${t.id}')">📊 Результаты</button>
-        <button class="btn bsm" onclick="copyTaskUrl('${t.id}')">🔗 Ссылка</button>
+        <button class="btn bsm bghost" style="border:1px solid var(--border)" onclick="copyTaskUrl('${t.id}')">🔗 Ссылка</button>
       </div>
     </div>`;
   }).join('');
@@ -600,8 +773,8 @@ function renderTList() {
 
 function renderRSel() {
   const s = document.getElementById('rsel'), cv = s.value;
-  s.innerHTML = '<option value="">— выберите задание —</option>' +
-    [...dashboardTasks].reverse().map(t => `<option value="${t.id}">${t.title}</option>`).join('');
+  s.innerHTML = '<option value="">— Выберите задание —</option>' +
+    [...dashboardTasks].reverse().map(t => `<option value="${t.id}">${eh(t.title)}</option>`).join('');
   if (cv) s.value = cv;
 }
 
@@ -627,86 +800,115 @@ async function loadResults(taskId) {
   if (!answers.length) { rb.classList.add('hidden'); re.classList.remove('hidden'); return; }
   re.classList.add('hidden'); rb.classList.remove('hidden');
 
-  // Compute scores using schema
-  const schema = task.schema_json;
+  const rawSch = task.schema_json;
+  const schema = typeof rawSch === 'string' ? JSON.parse(rawSch) : rawSch;
   const scored = answers.map(ans => {
-    let score = 0, total = schema.questions ? schema.questions.length : 0;
-    if (schema.questions) {
-      schema.questions.forEach(q => {
-        const userAns = ans.payload_json[q.id] || ans.payload_json[String(q.id)];
-        if (scoreQuestion(q, schema.type, userAns)) score++;
-      });
-    }
-    return { ...ans, score, total, pct: total ? Math.round((score / total) * 100) : 0 };
+    let score = 0, total = 0, details = [];
+    const trunc = s => String(s || '').length > 70 ? String(s).slice(0, 67) + '…' : String(s || '');
+    const qs = schema.questions || []; total = qs.length;
+    qs.forEach(q => {
+      const userAns = ans.payload_json[q.id] || ans.payload_json[String(q.id)];
+      const ok = scoreQuestion(q, schema.type, userAns); if (ok) score++;
+      const uStr = userAns !== undefined && userAns !== null
+        ? (Array.isArray(userAns) ? userAns.join(', ') : String(userAns)) : '—';
+      details.push({ label: trunc(q.text || 'Вопрос ' + q.id), userAns: trunc(uStr), correct: trunc(q.answer), ok });
+    });
+    return { ...ans, score, total, pct: total ? Math.round((score / total) * 100) : 0, details };
   });
 
   const avgPct = scored.length ? Math.round(scored.reduce((s, r) => s + r.pct, 0) / scored.length) : 0;
   document.getElementById('st-a').textContent = avgPct + '%';
 
-  const sc = p => p >= 70 ? '#16a34a' : p >= 40 ? '#d97706' : '#dc2626';
+  const sc = p => p >= 70 ? '#10b981' : p >= 40 ? '#f59e0b' : '#ef4444';
   document.getElementById('rtw').innerHTML = `<table class="rtable">
-    <thead><tr><th>Ученик</th><th>Результат</th><th>Балл</th><th>Время</th></tr></thead>
-    <tbody>${scored.map(r => {
+    <thead><tr><th>Ученик</th><th>Результат</th><th>Балл</th><th>Время</th><th></th></tr></thead>
+    <tbody>${scored.map((r, ri) => {
       const col = sc(r.pct);
       const ini = r.user_name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
       const ti = new Date(r.submitted_at).toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' });
-      return `<tr>
-        <td><div style="display:flex;align-items:center;gap:8px"><div class="av">${ini}</div>${r.user_name}</div></td>
-        <td><div class="mbar"><div class="mtrack"><div class="mfill" style="width:${r.pct}%;background:${col}"></div></div><span style="font-size:12px;color:${col};font-weight:600">${r.pct}%</span></div></td>
-        <td><b>${r.score}/${r.total}</b></td>
-        <td style="color:var(--ink3)">${ti}</td>
-      </tr>`;
+      const detHtml = (r.details || []).map(d => `<div class="ditem ${d.ok ? 'dok' : 'derr'}">
+        <span class="dicon">${d.ok ? '✓' : '✗'}</span>
+        <span class="dlabel">${eh(d.label)}</span>
+        <span class="dans">${d.ok
+          ? eh(d.userAns)
+          : '<span style="color:var(--red)">' + eh(d.userAns) + '</span><div class="dcorr">✓ ' + eh(d.correct) + '</div>'
+        }</span></div>`).join('');
+      return `<tr class="rrow-main" onclick="toggleRDetail(${ri})">
+        <td><div style="display:flex;align-items:center;gap:12px"><div class="av">${ini}</div><span style="font-weight:500">${eh(r.user_name)}</span></div></td>
+        <td><div class="mbar"><div class="mtrack"><div class="mfill" style="width:${r.pct}%;background:${col}"></div></div><span style="font-size:13px;color:${col};font-weight:700;width:35px;text-align:right">${r.pct}%</span></div></td>
+        <td><b>${r.score} <span style="color:var(--ink3);font-weight:400">/ ${r.total}</span></b></td>
+        <td style="color:var(--ink2)">${ti}</td>
+        <td><button class="dtoggle" id="dtog-${ri}" onclick="event.stopPropagation();toggleRDetail(${ri})">▾ Подробно</button></td>
+      </tr><tr class="rrow-detail" id="rdet-${ri}"><td colspan="5"><div class="detail-wrap">${detHtml || '<span style="font-size:13px;color:var(--ink3)">Нет данных</span>'}</div></td></tr>`;
     }).join('')}</tbody></table>`;
+}
+
+function toggleRDetail(ri) {
+  const row = document.getElementById('rdet-' + ri);
+  const tog = document.getElementById('dtog-' + ri);
+  if (!row) return;
+  const open = row.classList.toggle('open');
+  if (tog) tog.textContent = open ? '▴ Скрыть' : '▾ Подробно';
 }
 
 function scoreQuestion(q, type, userAns) {
   if (userAns === undefined || userAns === null) return false;
-  const correct = q.answer.toString().trim().toLowerCase();
+  const correct = (q.answer ?? '').toString().trim().toLowerCase();
   switch (type) {
-    case 'multiple_choice':
-    case 'true_false':
-      return userAns.toString().toLowerCase() === correct;
+    case 'multiple_choice': {
+      const corrA = correct.split(',').map(s => s.trim()).sort();
+      const ansA = (Array.isArray(userAns) ? userAns : [userAns || '']).map(v => v.toString().toLowerCase()).sort();
+      return JSON.stringify(corrA) === JSON.stringify(ansA);
+    }
     case 'fill_gaps': {
       const vals = typeof userAns === 'object' && !Array.isArray(userAns)
         ? Object.values(userAns) : [userAns];
-      const cp = correct.split(',').map(s => s.trim());
-      return vals.length > 0 && vals.every((v, i) => v.toString().toLowerCase() === (cp[i] || cp[0]));
-    }
-    case 'order_words': {
-      const sentence = Array.isArray(userAns) ? userAns.join(' ') : userAns.toString();
-      return sentence.toLowerCase() === correct;
+      const gapCs = correct.split(',').map(s => s.trim());
+      return vals.length > 0 && vals.every((v, i) => {
+        const variants = (gapCs[i] || gapCs[0]).split('|').map(s => s.toLowerCase().replace(/\s+/g, ' ').trim());
+        return variants.some(vv => vv === v.toString().toLowerCase().replace(/\s+/g, ' ').trim());
+      });
     }
     case 'open_answer':
-      return userAns.toString().toLowerCase().includes(correct.substring(0, 8));
+      return !!(userAns && userAns.toString().trim());
     default: return false;
   }
 }
 
 function copyTaskUrl(taskId) {
-  const url = location.origin + location.pathname + '#task/' + taskId;
-  navigator.clipboard.writeText(url).then(() => alert('Ссылка скопирована!'));
+  const url = API + '/taskboard#task/' + taskId;
+  navigator.clipboard.writeText(url).then(() => alert('Ссылка успешно скопирована!'));
 }
 
 // ── Student ───────────────────────────────────────────────────────────────────
 async function openByCode() {
-  const taskId = document.getElementById('cinput').value.trim();
+  let taskId = document.getElementById('cinput').value.trim();
+  if (taskId.includes('#task/')) taskId = taskId.split('#task/')[1];
+
   const ee = document.getElementById('cerr');
-  if (!taskId) { ee.textContent = 'Введите ID задания'; ee.classList.remove('hidden'); return; }
+  if (!taskId) { ee.textContent = 'Пожалуйста, введите код или ссылку на задание'; ee.classList.remove('hidden'); return; }
   ee.classList.add('hidden');
 
   showOv('Загружаю задание...');
   try {
     const res = await fetch(`${API}/static/tasks/${taskId}.json`);
     if (!res.ok) throw new Error('not found');
-    studTask = await res.json();
+    const data = await res.json();
+
+    // Response: { schema_json: {...}, image_url: "..." | null, audio_url: "..." | null }
+    // schema_json may arrive as a pre-parsed object or as a JSON string — handle both
+    const rawSchema = data.schema_json ?? data;
+    studTask = typeof rawSchema === 'string' ? JSON.parse(rawSchema) : rawSchema;
+    studTaskMedia = { img: data.image_url || null, aud: data.audio_url || null };
     studTaskId = taskId;
+
     document.getElementById('snlabel').textContent = studTask.name || 'Задание';
     document.getElementById('st-enter').classList.add('hidden');
     document.getElementById('st-name').classList.remove('hidden');
     document.getElementById('sname').value = '';
     document.getElementById('sname').focus();
   } catch(e) {
-    ee.textContent = 'Задание не найдено. Проверьте ID.'; ee.classList.remove('hidden');
+    ee.textContent = 'Задание не найдено. Проверьте правильность кода или ссылки.'; ee.classList.remove('hidden');
   } finally {
     hideOv();
   }
@@ -714,14 +916,14 @@ async function openByCode() {
 
 function startTask() {
   const name = document.getElementById('sname').value.trim();
-  if (!name) { alert('Введи имя'); return; }
+  if (!name) { alert('Пожалуйста, введите своё имя'); return; }
   document.getElementById('st-name').classList.add('hidden');
   renderStudTask(studTask, name);
 }
 
 function renderStudTask(task, sname) {
   document.getElementById('ttitle').textContent = task.name;
-  document.getElementById('tsub').textContent = (task.questions?.length || 0) + ' вопросов · ' + sname;
+  document.getElementById('tsub').textContent = (task.questions?.length || 0) + ' вопросов · Выполняет: ' + sname;
   document.getElementById('tbadge').textContent = 'В процессе';
   document.getElementById('tbadge').className = 'badge bblue';
   document.getElementById('rblock').classList.add('hidden');
@@ -730,19 +932,22 @@ function renderStudTask(task, sname) {
   studAns = {};
   const area = document.getElementById('qarea'); area.innerHTML = '';
 
+  // Show image/audio attachments from the static JSON wrapper
+  const attDiv = document.getElementById('stud-att');
+  let attHtml = '';
+  if (studTaskMedia.img) attHtml += `<img src="${API}${studTaskMedia.img}" alt="" style="max-width:100%;border-radius:8px;border:1px solid var(--border)">`;
+  if (studTaskMedia.aud) attHtml += `<audio controls style="width:100%" src="${API}${studTaskMedia.aud}"></audio>`;
+  attDiv.innerHTML = attHtml;
+  attDiv.classList.toggle('hidden', !attHtml);
+
   (task.questions || []).forEach(q => {
     const div = document.createElement('div');
     div.className = 'qstud'; div.dataset.qid = q.id;
     if (task.type === 'multiple_choice') {
       div.innerHTML = `<div class="qnum2">Вопрос ${q.id}</div><div class="qtext">${q.text}</div><div class="opts">${(q.options || []).map((o, i) => {
-        const L = ['A', 'B', 'C', 'D', 'E'];
-        return `<button class="obtn" data-qid="${q.id}" data-val="${escH(o)}" onclick="selOpt(this,${q.id},'${escQ(o)}')"><span class="oletter">${L[i] || i + 1}</span>${o}</button>`;
+        const L = ['A', 'B', 'C', 'D', 'E', 'F'];
+        return `<button class="obtn" data-qid="${q.id}" data-val="${escH(o)}" onclick="selOpt(this,${q.id},'${escQ(o)}')"><span class="oletter">${L[i] || i + 1}</span>${escH(o)}</button>`;
       }).join('')}</div>`;
-    } else if (task.type === 'true_false') {
-      div.innerHTML = `<div class="qnum2">Вопрос ${q.id}</div><div class="qtext">${q.text}</div><div class="opts">
-        <button class="obtn" data-qid="${q.id}" data-val="true" onclick="selOpt(this,${q.id},'true')"><span class="oletter">T</span>Верно</button>
-        <button class="obtn" data-qid="${q.id}" data-val="false" onclick="selOpt(this,${q.id},'false')"><span class="oletter">F</span>Неверно</button>
-      </div>`;
     } else if (task.type === 'fill_gaps') {
       let gi = 0;
       const h = q.text.replace(/___/g, () => {
@@ -750,12 +955,8 @@ function renderStudTask(task, sname) {
         return `<input class="gapinp" id="${id}" data-qid="${q.id}" data-gi="${gi - 1}" placeholder="…" oninput="recGap(${q.id},this)">`;
       });
       div.innerHTML = `<div class="qnum2">Вопрос ${q.id}</div><div class="qtext gapwrap">${h}</div>`;
-    } else if (task.type === 'order_words') {
-      const ws = shuf([...(q.words && q.words.length ? q.words : q.answer.split(' '))]);
-      studAns[q.id] = [];
-      div.innerHTML = `<div class="qnum2">Вопрос ${q.id}</div>${q.text ? `<div class="qtext">${q.text}</div>` : ''}<div style="font-size:12px;color:var(--ink3);margin-bottom:6px">Нажимай слова по порядку:</div><div class="owrap" id="pl-${q.id}"></div><div class="row" style="flex-wrap:wrap;gap:6px;margin-top:8px" id="ch-${q.id}">${ws.map(w => `<button class="wchip" onclick="placeW(${q.id},this,'${escQ(w)}')">${w}</button>`).join('')}</div><button class="btn bsm" style="margin-top:8px" onclick="clrOrd(${q.id})">Сбросить</button>`;
     } else {
-      div.innerHTML = `<div class="qnum2">Вопрос ${q.id}</div><div class="qtext">${q.text}</div><textarea rows="2" placeholder="Ваш ответ..." oninput="studAns[${q.id}]=this.value"></textarea>`;
+      div.innerHTML = `<div class="qnum2">Вопрос ${q.id}</div><div class="qtext">${escH(q.text)}</div><textarea rows="3" placeholder="Напишите ваш ответ здесь..." oninput="studAns[${q.id}]=this.value"></textarea>`;
     }
     area.appendChild(div);
   });
@@ -763,67 +964,89 @@ function renderStudTask(task, sname) {
 
 function escH(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function escQ(s) { return String(s).replace(/'/g, "\\'"); }
-function shuf(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-function selOpt(btn, qid, val) { document.querySelectorAll(`[data-qid="${qid}"]`).forEach(b => { b.classList.remove('sel'); b.disabled = false; }); btn.classList.add('sel'); studAns[qid] = val; }
-function recGap(qid, inp) { if (!studAns[qid] || typeof studAns[qid] !== 'object' || Array.isArray(studAns[qid])) studAns[qid] = {}; studAns[qid][inp.dataset.gi] = inp.value.trim(); }
-function placeW(qid, btn, w) {
-  if (!Array.isArray(studAns[qid])) studAns[qid] = [];
-  btn.classList.add('used');
-  const pl = document.getElementById('pl-' + qid), chip = document.createElement('button');
-  chip.className = 'wchip placed'; chip.textContent = w; chip.dataset.word = w;
-  chip.onclick = () => { chip.remove(); btn.classList.remove('used'); studAns[qid] = Array.from(pl.children).map(c => c.dataset.word); };
-  pl.appendChild(chip); studAns[qid] = Array.from(pl.children).map(c => c.dataset.word);
+function eh(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+function selOpt(btn, qid, val) {
+  if (studTask && studTask.type === 'multiple_choice') {
+    if (!Array.isArray(studAns[qid])) studAns[qid] = [];
+    if (btn.classList.contains('sel')) {
+      btn.classList.remove('sel');
+      studAns[qid] = studAns[qid].filter(v => v !== val);
+    } else {
+      btn.classList.add('sel');
+      studAns[qid] = [...studAns[qid], val];
+    }
+  } else {
+    document.querySelectorAll('[data-qid="' + qid + '"]').forEach(b => { b.classList.remove('sel'); });
+    btn.classList.add('sel');
+    studAns[qid] = val;
+  }
 }
-function clrOrd(qid) { studAns[qid] = []; document.getElementById('pl-' + qid).innerHTML = ''; document.querySelectorAll(`#ch-${qid} .wchip`).forEach(c => c.classList.remove('used')); }
+
+function recGap(qid, inp) {
+  if (!studAns[qid] || typeof studAns[qid] !== 'object' || Array.isArray(studAns[qid])) studAns[qid] = {};
+  studAns[qid][inp.dataset.gi] = inp.value.trim();
+}
+
+function normAns(s) { return String(s).toLowerCase().replace(/\s+/g, ' ').trim(); }
+function matchVariants(userVal, correctStr) {
+  return correctStr.split('|').map(v => normAns(v)).some(v => v === normAns(userVal));
+}
 
 async function checkAnswers() {
   const task = studTask; if (!task) return;
-  const sname = document.getElementById('tsub').textContent.split(' · ')[1] || 'Ученик';
-  let score = 0, total = task.questions.length;
+  const sname = document.getElementById('tsub').textContent.split('Выполняет: ')[1] || 'Ученик';
+  let score = 0, total = (task.questions || []).length;
 
   task.questions.forEach(q => {
-    const correct = q.answer.toString().trim().toLowerCase();
+    const correct = (q.answer ?? '').toString().trim().toLowerCase();
     const ans = studAns[q.id];
     let ok = false;
 
     if (task.type === 'fill_gaps') {
-      const vals = Object.values(ans || {}), cp = correct.split(',').map(s => s.trim());
-      ok = vals.length > 0 && vals.every((v, i) => v.toLowerCase() === (cp[i] || cp[0]));
+      const gapCorrects = correct.split(',').map(s => s.trim());
+      const vals = Object.values(ans || {});
+      ok = vals.length > 0 && vals.every((v, i) => matchVariants(v, gapCorrects[i] || gapCorrects[0]));
       document.querySelectorAll(`input[data-qid="${q.id}"]`).forEach((inp, i) => {
-        const ca = (correct.split(',')[i] || correct).trim();
-        inp.classList.add(inp.value.trim().toLowerCase() === ca ? 'ok' : 'bad'); inp.disabled = true;
+        const ca = gapCorrects[i] || gapCorrects[0];
+        inp.classList.add(matchVariants(inp.value, ca) ? 'ok' : 'bad'); inp.disabled = true;
       });
-    } else if (task.type === 'order_words') {
-      ok = (Array.isArray(ans) ? ans : []).join(' ').toLowerCase() === correct;
-    } else if (task.type === 'multiple_choice' || task.type === 'true_false') {
-      ok = (ans || '').toString().toLowerCase() === correct;
+    } else if (task.type === 'multiple_choice') {
+      const corrArr = correct.split(',').map(s => s.trim()).sort();
+      const ansArr = (Array.isArray(ans) ? ans : [ans || '']).map(v => v.toString().toLowerCase()).sort();
+      ok = JSON.stringify(corrArr) === JSON.stringify(ansArr);
       document.querySelectorAll(`[data-qid="${q.id}"]`).forEach(b => {
         b.disabled = true;
-        const bv = b.dataset.val?.toLowerCase();
-        if (bv === correct) b.classList.add('ok');
-        else if (bv === (ans || '').toString().toLowerCase() && !ok) b.classList.add('bad');
+        const bv = (b.dataset.val || '').toLowerCase();
+        if (corrArr.includes(bv)) b.classList.add('ok');
+        else if (ansArr.includes(bv)) b.classList.add('bad');
         b.classList.remove('sel');
       });
     } else {
-      ok = (ans || '').toString().trim().toLowerCase().includes(correct.substring(0, 8));
+      ok = !!(ans || '').toString().trim();
     }
 
-    if (ok) score++;
-    const card = document.querySelector(`.qstud[data-qid="${q.id}"]`);
-    if (card) card.style.borderColor = ok ? 'var(--green)' : 'var(--red)';
+    if (task.type !== 'open_answer') {
+      if (ok) score++;
+      const card = document.querySelector(`.qstud[data-qid="${q.id}"]`);
+      if (card) card.style.borderColor = ok ? 'var(--green)' : 'var(--red)';
+    } else {
+      score++;
+      const card = document.querySelector(`.qstud[data-qid="${q.id}"]`);
+      if (card) card.style.borderColor = 'var(--border2)';
+    }
   });
 
   const pct = Math.round((score / total) * 100);
   const col = pct >= 70 ? 'var(--green)' : pct >= 40 ? 'var(--amber)' : 'var(--red)';
-  const msg = pct === 100 ? 'Отлично! Всё правильно! 🎉' : pct >= 70 ? 'Хорошая работа!' : pct >= 40 ? 'Неплохо, есть ошибки' : 'Нужно повторить тему';
+  const msg = pct === 100 ? 'Отлично! Всё правильно! 🎉' : pct >= 70 ? 'Хорошая работа! 👍' : pct >= 40 ? 'Неплохо, но есть ошибки' : 'Нужно повторить тему 📚';
 
-  document.getElementById('rblock').innerHTML = `<div style="padding:16px;background:var(--bg);border-radius:var(--rs);border:1px solid var(--border)"><div style="font-size:16px;font-weight:600;color:${col};margin-bottom:4px">${msg}</div><div style="font-size:14px;color:var(--ink2)">${score} из ${total} правильно (${pct}%)</div><div class="rbar"><div class="rfill" style="width:${pct}%;background:${col}"></div></div></div>`;
+  document.getElementById('rblock').innerHTML = `<div style="padding:24px;background:#f8fafc;border-radius:var(--rs);border:1px solid var(--border);text-align:center"><div style="font-size:20px;font-weight:700;color:${col};margin-bottom:8px">${msg}</div><div style="font-size:16px;color:var(--ink2);margin-bottom:16px">Вы набрали <b>${score} из ${total}</b> баллов (${pct}%)</div><div class="rbar" style="max-width:300px;margin:0 auto;height:12px"><div class="rfill" style="width:${pct}%;background:${col}"></div></div></div>`;
   document.getElementById('rblock').classList.remove('hidden');
   document.getElementById('crow').classList.add('hidden');
   document.getElementById('tbadge').textContent = 'Сдано';
   document.getElementById('tbadge').className = 'badge bgreen2';
 
-  // Отправляем ответы на сервер (payload_json: { questionId: answer })
   const payload = {};
   task.questions.forEach(q => { payload[q.id] = studAns[q.id] !== undefined ? studAns[q.id] : null; });
 
@@ -842,16 +1065,19 @@ function hideOv() { document.getElementById('overlay').classList.add('hidden'); 
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 window.addEventListener('load', async () => {
-  const k = lsGet('tb_key');
-  console.log('[TB] init, stored key:', k ? k.slice(0,8) + '…' : 'none');
-  if (k) {
-    document.getElementById('api-key').value = k;
-    setKeyStatus('Сохранён ✓', true);
+  if (location.hash.startsWith('#task/')) {
+    routeHash();
+  } else {
+    const k = getKey();
+    if (k) {
+      showPage('teacher');
+      await loadDashboardTasks();
+    } else {
+      showPage('login');
+    }
   }
-  await loadDashboardTasks();
-  routeHash();
 });
 </script>
 
-
-</body></html>
+</body>
+</html>
