@@ -394,7 +394,7 @@ input.gapinp.bad { border-bottom-color: var(--red); border-bottom-style: solid; 
 </div>
 
 <script>
-const API = 'https://api.aiaistudio.org';
+const API = window.location.origin;
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let curTaskId = null;
@@ -810,7 +810,9 @@ async function loadResults(taskId) {
       const userAns = ans.payload_json[q.id] || ans.payload_json[String(q.id)];
       const ok = scoreQuestion(q, schema.type, userAns); if (ok) score++;
       const uStr = userAns !== undefined && userAns !== null
-        ? (Array.isArray(userAns) ? userAns.join(', ') : String(userAns)) : '—';
+        ? (Array.isArray(userAns) ? userAns.join(', ')
+          : typeof userAns === 'object' ? Object.values(userAns).join(', ')
+          : String(userAns)) : '—';
       details.push({ label: trunc(q.text || 'Вопрос ' + q.id), userAns: trunc(uStr), correct: trunc(q.answer), ok });
     });
     return { ...ans, score, total, pct: total ? Math.round((score / total) * 100) : 0, details };
@@ -952,7 +954,7 @@ function renderStudTask(task, sname) {
       let gi = 0;
       const h = q.text.replace(/___/g, () => {
         const id = `g_${q.id}_${gi++}`;
-        return `<input class="gapinp" id="${id}" data-qid="${q.id}" data-gi="${gi - 1}" placeholder="…" oninput="recGap(${q.id},this)">`;
+        return `<input class="gapinp" id="${id}" data-qid="${q.id}" data-gi="${gi - 1}" placeholder="…" autocomplete="off" oninput="recGap(${q.id},this)">`;
       });
       div.innerHTML = `<div class="qnum2">Вопрос ${q.id}</div><div class="qtext gapwrap">${h}</div>`;
     } else {

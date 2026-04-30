@@ -46,4 +46,18 @@ Five types with distinct rendering and scoring logic: `fill` (fill-in-gaps), `ch
 
 ## Deployment
 
-Deployed to GitHub Pages. Push to `main` triggers the pages deploy. The student link always points to the backend-defined URL (see commit history for context on `student link always points to backend`).
+### GitHub Pages
+Push to `main` triggers the pages deploy. The student link always points to the backend-defined URL (see commit history for context on `student link always points to backend`).
+
+### Production server (api.aiaistudio.org)
+The teacher UI is also served directly from the backend at `https://api.aiaistudio.org/taskboard`. nginx serves the file via alias — no server restart needed.
+
+Deploy with one SCP command:
+
+```bash
+scp -i ~/.ssh/ssh-key-1775318455999 -o StrictHostKeyChecking=no \
+  /c/Users/Akimy/IdeaProjects/taskgenerator/index.html \
+  root1@158.160.207.247:/opt/ai-backend/static/taskboard.html
+```
+
+After upload the change is live immediately at `https://api.aiaistudio.org/taskboard`.
