@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-store">
+<title>Задание — jumpED</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --border2: #cbd5e1;
+  --ink: #0f172a;
+  --ink2: #475569;
+  --ink3: #94a3b8;
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --abg: #e0e7ff;
+  --green: #10b981;
+  --gbg: #d1fae5;
+  --gb: #6ee7b7;
+  --red: #ef4444;
+  --rbg: #fee2e2;
+  --rb: #fca5a5;
+  --amber: #f59e0b;
+  --ambg: #fef3c7;
+  --r: 16px;
+  --rs: 8px;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,.05), 0 2px 4px -1px rgba(0,0,0,.03);
+  --shadow-hover: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -2px rgba(0,0,0,.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; line-height: 1.5; }
+
+.topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 2px 0 rgba(0,0,0,.05); }
+.logo { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; letter-spacing: -0.02em; }
+.logo-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+
+.container { max-width: 800px; margin: 0 auto; padding: 32px 20px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px 28px; margin-bottom: 20px; box-shadow: var(--shadow); }
+.ctitle { font-size: 12px; font-weight: 700; color: var(--ink3); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 16px; }
+.stitle { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.01em; }
+.ssub { font-size: 15px; color: var(--ink2); margin-bottom: 24px; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 18px; font-size: 14px; font-weight: 500; border: 1px solid var(--border2); border-radius: var(--rs); background: var(--surface); color: var(--ink); cursor: pointer; transition: all .15s ease; white-space: nowrap; box-shadow: 0 1px 2px 0 rgba(0,0,0,.05); }
+.btn:hover { background: #f1f5f9; border-color: var(--ink3); }
+.btn:active { transform: translateY(1px); box-shadow: none; }
+.bprimary { background: var(--accent); color: #fff; border-color: transparent; box-shadow: 0 1px 3px 0 rgba(79,70,229,.4); }
+.bprimary:hover { background: var(--accent-hover); border-color: transparent; box-shadow: 0 4px 6px -1px rgba(79,70,229,.4); }
+.bsm { padding: 6px 14px; font-size: 13px; }
+.bghost { background: transparent; border-color: transparent; color: var(--ink2); box-shadow: none; }
+.bghost:hover { background: var(--bg); border-color: transparent; color: var(--ink); }
+.btn:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; pointer-events: none; }
+
+input[type=text], textarea { width: 100%; padding: 12px 16px; border: 1px solid var(--border2); border-radius: var(--rs); font-size: 15px; font-family: inherit; background: var(--surface); color: var(--ink); outline: none; transition: all .2s; box-shadow: 0 1px 2px 0 rgba(0,0,0,.05) inset; }
+input[type=text]:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,70,229,.15); }
+label { display: block; font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
+.field { margin-bottom: 20px; }
+
+.badge { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: .02em; }
+.bblue { background: var(--abg); color: var(--accent-hover); }
+.bgreen2 { background: var(--gbg); color: #047857; }
+.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+.alert { padding: 14px 18px; border-radius: var(--rs); font-size: 14px; line-height: 1.5; display: flex; align-items: center; gap: 8px; }
+.agreen { background: var(--gbg); color: #064e3b; border: 1px solid var(--gb); }
+.ared { background: var(--rbg); color: #7f1d1d; border: 1px solid var(--rb); }
+.ablue { background: var(--abg); color: #1e3a8a; border: 1px solid #bfdbfe; }
+
+.spin { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.hidden { display: none !important; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+.qstud { background: var(--surface); border: 1px solid var(--border); border-radius: var(--rs); padding: 24px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.04); transition: border-color .3s ease; }
+.qnum2 { font-size: 12px; font-weight: 700; color: var(--ink3); text-transform: uppercase; margin-bottom: 12px; letter-spacing: .05em; }
+.qtext { font-size: 17px; font-weight: 500; line-height: 1.6; margin-bottom: 20px; color: var(--ink); }
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.obtn { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 2px solid var(--border); border-radius: var(--rs); background: var(--surface); cursor: pointer; font-size: 15px; font-weight: 500; color: var(--ink); transition: all .15s ease; text-align: left; width: 100%; box-shadow: 0 1px 2px rgba(0,0,0,.01); }
+.obtn:hover { border-color: var(--border2); background: #f8fafc; }
+.obtn.sel { border-color: var(--accent); background: var(--abg); color: var(--accent-hover); box-shadow: 0 2px 4px rgba(79,70,229,.1); }
+.obtn.ok { border-color: var(--green); background: var(--gbg); color: #064e3b; }
+.obtn.bad { border-color: var(--red); background: var(--rbg); color: #7f1d1d; }
+.obtn:disabled { cursor: default; transform: none; }
+.oletter { width: 26px; height: 26px; border-radius: 50%; border: 2px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; opacity: .7; background: #fff; }
+.obtn.sel .oletter { opacity: 1; background: var(--accent); color: #fff; border-color: var(--accent); }
+.obtn.ok .oletter { background: var(--green); border-color: var(--green); color: #fff; opacity: 1; }
+.obtn.bad .oletter { background: var(--red); border-color: var(--red); color: #fff; opacity: 1; }
+
+.gapwrap { font-size: 17px; line-height: 2.4; font-weight: 400; color: var(--ink); }
+input.gapinp { display: inline-block; width: auto; border: none; border-bottom: 2px dashed var(--border2); background: transparent; font-size: inherit; padding: 2px 4px; margin: 0 2px; min-width: 60px; max-width: 140px; color: var(--accent); font-weight: 600; outline: none; text-align: center; border-radius: 0; box-shadow: none; transition: border-color .2s; vertical-align: baseline; }
+input.gapinp:focus { border-bottom-color: var(--accent); border-bottom-style: solid; background: var(--abg); box-shadow: none; }
+input.gapinp.ok { border-bottom-color: var(--green); border-bottom-style: solid; background: var(--gbg); color: #047857; }
+input.gapinp.bad { border-bottom-color: var(--red); border-bottom-style: solid; background: var(--rbg); color: #b91c1c; text-decoration: line-through; }
+
+.rbar { height: 10px; background: var(--border); border-radius: 6px; overflow: hidden; margin-top: 12px; }
+.rfill { height: 100%; border-radius: 6px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+
+.stud-att { margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px; background: #f8fafc; padding: 16px; border-radius: var(--rs); border: 1px solid var(--border); }
+.stud-att img { max-width: 100%; border-radius: 6px; border: 1px solid var(--border); }
+
+.instr-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--rs); padding: 16px 20px; margin-bottom: 20px; font-size: 15px; color: #713f12; line-height: 1.6; }
+.instr-box strong { font-weight: 700; display: block; margin-bottom: 4px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; }
+
+.overlay { position: fixed; inset: 0; background: rgba(255,255,255,.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; gap: 16px; backdrop-filter: blur(4px); }
+.overlay p { font-size: 15px; font-weight: 500; color: var(--ink); }
+.bspin { width: 48px; height: 48px; border-width: 3px; border-top-color: var(--accent); }
+
+/* Gaming progress bar */
+.gaming-progress { margin-bottom: 20px; display: none; }
+#page-student.theme-gaming .gaming-progress { display: block; }
+.gp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.gp-label  { font-size: 11px; font-weight: 800; color: #00ffc8; text-transform: uppercase; letter-spacing: .1em; }
+.gp-count  { font-size: 11px; font-weight: 700; color: rgba(0,255,200,.65); }
+.gp-track  { height: 10px; background: rgba(0,255,200,.08); border-radius: 6px; overflow: hidden; border: 1px solid rgba(0,255,200,.14); position: relative; }
+.gp-fill   { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #00cc96, #00ffc8); box-shadow: 0 0 8px rgba(0,255,200,.4); width: 0%; transition: width .4s cubic-bezier(.4,0,.2,1); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+#page-student { animation: fadeIn 0.3s ease; }
+
+@media(max-width: 600px) {
+  .container { padding: 20px 16px; }
+}
+
+/* ══════════════════════════════════════════════
+   TOPBAR theming
+══════════════════════════════════════════════ */
+#topbar.theme-tb-space  { background: rgba(10,5,30,.97) !important; border-color: rgba(139,92,246,.25) !important; }
+#topbar.theme-tb-space .logo { color: #c4b5fd; }
+#topbar.theme-tb-gaming { background: rgba(5,5,16,.97) !important; border-color: rgba(0,255,200,.12) !important; }
+#topbar.theme-tb-gaming .logo { color: #00ffc8; }
+#topbar.theme-tb-magic  { background: rgba(253,248,240,.97) !important; border-color: rgba(139,92,246,.12) !important; }
+#topbar.theme-tb-magic .logo { color: #2d1b4e; }
+#topbar.theme-tb-music  { background: rgba(255,255,255,.97) !important; border-color: rgba(200,80,200,.1) !important; }
+#topbar.theme-tb-music .logo { color: #1e1e2e; }
+
+/* ══════════════════════════════════════════════
+   THEME: SPACE 🚀
+══════════════════════════════════════════════ */
+#page-student.theme-space {
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(120,40,200,.55) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 85%, rgba(40,10,140,.7) 0%, transparent 50%),
+    linear-gradient(180deg, #0a0118 0%, #0d0221 55%, #050012 100%);
+  min-height: 100vh; position: relative;
+}
+#page-student.theme-space::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.9) 1px,transparent 1px) 10% 12%/1px 1px,
+    radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1px) 23% 38%/1px 1px,
+    radial-gradient(circle,rgba(200,180,255,.9) 2px,transparent 2px) 36% 18%/2px 2px,
+    radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1px) 49% 55%/1px 1px,
+    radial-gradient(circle,rgba(255,255,255,.9) 1px,transparent 1px) 63% 8%/1px 1px,
+    radial-gradient(circle,rgba(255,255,255,.6) 1px,transparent 1px) 76% 43%/1px 1px,
+    radial-gradient(circle,rgba(200,200,255,.9) 2px,transparent 2px) 89% 22%/2px 2px,
+    radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1px) 6%  68%/1px 1px,
+    radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1px) 19% 82%/1px 1px,
+    radial-gradient(circle,rgba(255,200,255,.9) 1px,transparent 1px) 31% 73%/1px 1px,
+    radial-gradient(circle,rgba(255,255,255,.6) 2px,transparent 2px) 46% 89%/2px 2px,
+    radial-gradient(circle,rgba(255,255,255,.9) 1px,transparent 1px) 59% 76%/1px 1px,
+    radial-gradient(circle,rgba(200,180,255,.8) 1px,transparent 1px) 73% 93%/1px 1px,
+    radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1px) 86% 67%/1px 1px,
+    radial-gradient(circle,rgba(255,255,255,.9) 2px,transparent 2px) 94% 89%/2px 2px;
+  background-repeat: no-repeat;
+  animation: twinkle 4s ease-in-out infinite alternate;
+}
+@keyframes twinkle { from{opacity:.65} to{opacity:1} }
+@keyframes float { 0%,100%{transform:translateY(0) rotate(0deg)} 33%{transform:translateY(-14px) rotate(4deg)} 66%{transform:translateY(-7px) rotate(-3deg)} }
+#page-student.theme-space .container { position:relative; z-index:1; }
+#page-student.theme-space .card { background: rgba(14,7,38,.87); border: 1px solid rgba(139,92,246,.28); box-shadow: 0 0 40px rgba(139,92,246,.1), inset 0 1px 0 rgba(255,255,255,.04); backdrop-filter: blur(16px); }
+#page-student.theme-space .qstud { background: rgba(20,10,52,.78); border: 1px solid rgba(139,92,246,.2); box-shadow: 0 2px 14px rgba(0,0,0,.35); }
+#page-student.theme-space .qnum2 { color: #a78bfa; }
+#page-student.theme-space .qtext { color: #ede9fe; }
+#page-student.theme-space .obtn { background: rgba(139,92,246,.07); border: 2px solid rgba(139,92,246,.2); color: #ede9fe; }
+#page-student.theme-space .obtn:hover { background: rgba(139,92,246,.18); border-color: rgba(139,92,246,.48); }
+#page-student.theme-space .obtn.sel { background: rgba(139,92,246,.24); border-color: #7c3aed; color: #ede9fe; box-shadow: 0 0 14px rgba(139,92,246,.28); }
+#page-student.theme-space .obtn.ok  { border-color: #34d399; background: rgba(52,211,153,.14); color: #6ee7b7; }
+#page-student.theme-space .obtn.bad { border-color: #f87171; background: rgba(248,113,113,.14); color: #fca5a5; }
+#page-student.theme-space .oletter  { background: rgba(139,92,246,.18); border-color: rgba(139,92,246,.38); color: #c4b5fd; }
+#page-student.theme-space .obtn.sel .oletter { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+#page-student.theme-space textarea, #page-student.theme-space input.gapinp { background: rgba(18,8,48,.55); border-color: rgba(139,92,246,.28); color: #ede9fe; }
+#page-student.theme-space .gapwrap { color: #ede9fe; }
+#page-student.theme-space input.gapinp { border-bottom-color: rgba(139,92,246,.5); color: #c4b5fd; }
+#page-student.theme-space #tbadge.bblue { background: rgba(139,92,246,.18) !important; color: #c4b5fd !important; border: 1px solid rgba(139,92,246,.35) !important; }
+#page-student.theme-space #ttitle { color: #ede9fe; }
+#page-student.theme-space #tsub  { color: #a78bfa; }
+#page-student.theme-space .divider { border-color: rgba(139,92,246,.18); }
+#page-student.theme-space .instr-box { background: rgba(139,92,246,.1); border-color: rgba(139,92,246,.24); color: #c4b5fd; }
+#page-student.theme-space .instr-box strong { color: #a78bfa; }
+#page-student.theme-space .stud-att { background: rgba(18,8,48,.5); border-color: rgba(139,92,246,.22); }
+#page-student.theme-space .btn-themed { background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%) !important; border: none !important; color: #fff !important; box-shadow: 0 0 28px rgba(139,92,246,.45), inset 0 1px 0 rgba(255,255,255,.1) !important; }
+#page-student.theme-space #rblock > div { background: rgba(20,10,52,.85) !important; border-color: rgba(139,92,246,.2) !important; }
+
+/* ══════════════════════════════════════════════
+   THEME: MAGIC 🧪
+══════════════════════════════════════════════ */
+#page-student.theme-magic {
+  background:
+    radial-gradient(ellipse at 88% 5%,  rgba(167,139,250,.38) 0%, transparent 42%),
+    radial-gradient(ellipse at 12% 92%, rgba(110,231,183,.38) 0%, transparent 42%),
+    linear-gradient(158deg, #ede9fe 0%, #d8f3dc 45%, #f3e8ff 80%, #e9d5ff 100%);
+  min-height: 100vh; position: relative;
+}
+#page-student.theme-magic::before { content: '✦'; position: fixed; font-size: 16px; color: rgba(139,92,246,.28); top: 14%; right: 7%; pointer-events: none; z-index: 0; animation: float 6s ease-in-out infinite; }
+#page-student.theme-magic::after  { content: '✧'; position: fixed; font-size: 11px; color: rgba(110,231,183,.38); top: 42%; left: 4%; pointer-events: none; z-index: 0; animation: float 8.5s ease-in-out infinite reverse; }
+#page-student.theme-magic .container { position: relative; z-index: 1; }
+#page-student.theme-magic .card { background: rgba(253,248,240,.97); border: 1px solid rgba(139,92,246,.14); box-shadow: 0 8px 32px rgba(139,92,246,.09), 0 2px 8px rgba(0,0,0,.04); }
+#page-student.theme-magic .qstud { background: rgba(255,252,245,.95); border: 1px solid rgba(139,92,246,.11); box-shadow: 0 2px 12px rgba(139,92,246,.06); }
+#page-student.theme-magic .qnum2  { color: #7c3aed; }
+#page-student.theme-magic .qtext  { color: #2d1b4e; }
+#page-student.theme-magic .obtn   { background: rgba(255,252,245,.92); border: 1.5px solid rgba(139,92,246,.18); color: #2d1b4e; }
+#page-student.theme-magic .obtn:hover { background: rgba(139,92,246,.06); border-color: rgba(139,92,246,.35); }
+#page-student.theme-magic .obtn.sel { background: rgba(139,92,246,.08); border-color: #7c3aed; color: #5b21b6; }
+#page-student.theme-magic .obtn.ok  { border-color: #059669; background: rgba(5,150,105,.06); color: #065f46; }
+#page-student.theme-magic .obtn.bad { border-color: #dc2626; background: rgba(220,38,38,.06); color: #7f1d1d; }
+#page-student.theme-magic .oletter  { border-color: rgba(139,92,246,.28); color: #7c3aed; background: rgba(139,92,246,.05); }
+#page-student.theme-magic .obtn.sel .oletter { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+#page-student.theme-magic textarea { background: rgba(255,252,245,.82); border-color: rgba(139,92,246,.19); color: #2d1b4e; }
+#page-student.theme-magic .gapwrap { color: #2d1b4e; }
+#page-student.theme-magic input.gapinp { border-bottom-color: rgba(139,92,246,.45); color: #7c3aed; }
+#page-student.theme-magic #tbadge.bblue { background: rgba(139,92,246,.08) !important; color: #5b21b6 !important; border: 1px solid rgba(139,92,246,.2) !important; }
+#page-student.theme-magic #ttitle { color: #2d1b4e; }
+#page-student.theme-magic #tsub  { color: #6d28d9; }
+#page-student.theme-magic .divider { border-color: rgba(139,92,246,.14); }
+#page-student.theme-magic .instr-box { background: rgba(139,92,246,.06); border-color: rgba(139,92,246,.18); color: #5b21b6; }
+#page-student.theme-magic .instr-box strong { color: #7c3aed; }
+#page-student.theme-magic .stud-att { background: rgba(255,252,245,.72); border-color: rgba(139,92,246,.14); }
+#page-student.theme-magic .btn-themed { background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 100%) !important; border: 2px solid rgba(255,215,0,.28) !important; color: #fff !important; box-shadow: 0 4px 22px rgba(91,33,182,.3) !important; }
+
+/* ══════════════════════════════════════════════
+   THEME: GAMING 🎮
+══════════════════════════════════════════════ */
+#page-student.theme-gaming {
+  background:
+    radial-gradient(ellipse at 28% 0%,  rgba(0,255,200,.05) 0%, transparent 42%),
+    radial-gradient(ellipse at 72% 100%,rgba(100,0,255,.09) 0%, transparent 42%),
+    linear-gradient(180deg, #05050f 0%, #0a0a1e 65%, #05050f 100%);
+  min-height: 100vh;
+}
+#page-student.theme-gaming .container { position: relative; z-index: 1; }
+#page-student.theme-gaming .card { background: rgba(10,10,28,.92); border: 1px solid rgba(0,255,200,.14); box-shadow: 0 0 32px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.025); backdrop-filter: blur(8px); }
+#page-student.theme-gaming .qstud { background: rgba(8,8,26,.87); border: 1px solid rgba(0,255,200,.11); box-shadow: 0 2px 14px rgba(0,0,0,.5); }
+#page-student.theme-gaming .qnum2 { color: #00ffc8; text-transform: uppercase; letter-spacing: .12em; font-size: 11px; }
+#page-student.theme-gaming .qtext { color: #e0e0f0; }
+#page-student.theme-gaming .obtn { background: rgba(0,255,200,.04); border: 2px solid rgba(0,255,200,.14); color: #e0e0f0; font-weight: 600; }
+#page-student.theme-gaming .obtn:hover { background: rgba(0,255,200,.1); border-color: rgba(0,255,200,.4); box-shadow: 0 0 14px rgba(0,255,200,.14); }
+#page-student.theme-gaming .obtn.sel { background: rgba(0,255,200,.14); border-color: #00ffc8; color: #00ffc8; box-shadow: 0 0 18px rgba(0,255,200,.2); }
+#page-student.theme-gaming .obtn.ok  { border-color: #00ffc8; background: rgba(0,255,200,.12); color: #00ffc8; }
+#page-student.theme-gaming .obtn.bad { border-color: #ff4060; background: rgba(255,64,96,.12);  color: #ff4060; }
+#page-student.theme-gaming .oletter  { border-color: rgba(0,255,200,.28); color: #00ffc8; background: rgba(0,255,200,.06); }
+#page-student.theme-gaming .obtn.sel .oletter { background: #00ffc8; border-color: #00ffc8; color: #05050f; }
+#page-student.theme-gaming textarea, #page-student.theme-gaming input.gapinp { background: rgba(8,8,26,.72); border-color: rgba(0,255,200,.18); color: #e0e0f0; }
+#page-student.theme-gaming .gapwrap { color: #e0e0f0; }
+#page-student.theme-gaming input.gapinp { border-bottom-color: rgba(0,255,200,.45); color: #00ffc8; }
+#page-student.theme-gaming #tbadge.bblue { background: rgba(0,255,200,.1) !important; color: #00ffc8 !important; border: 1px solid rgba(0,255,200,.28) !important; }
+#page-student.theme-gaming #ttitle { color: #fff; text-transform: uppercase; letter-spacing: .03em; }
+#page-student.theme-gaming #tsub  { color: rgba(0,255,200,.6); }
+#page-student.theme-gaming .divider { border-color: rgba(0,255,200,.1); }
+#page-student.theme-gaming .instr-box { background: rgba(0,255,200,.06); border-color: rgba(0,255,200,.18); color: #a0ffd8; }
+#page-student.theme-gaming .instr-box strong { color: #00ffc8; }
+#page-student.theme-gaming .stud-att { background: rgba(8,8,26,.7); border-color: rgba(0,255,200,.14); }
+#page-student.theme-gaming .btn-themed { background: linear-gradient(90deg, #00cc96 0%, #00ffc8 100%) !important; border: none !important; color: #05050f !important; font-weight: 800 !important; box-shadow: 0 0 32px rgba(0,255,200,.35), inset 0 1px 0 rgba(255,255,255,.1) !important; }
+
+/* ══════════════════════════════════════════════
+   THEME: MUSIC 🎵
+══════════════════════════════════════════════ */
+#page-student.theme-music {
+  background:
+    radial-gradient(ellipse at 75% 5%,  rgba(255,100,200,.22) 0%, transparent 45%),
+    radial-gradient(ellipse at 25% 95%, rgba(150,50,255,.18) 0%, transparent 45%),
+    linear-gradient(160deg, #fff5fb 0%, #f3e8ff 50%, #ffe4f3 80%, #fce7f3 100%);
+  min-height: 100vh; position: relative;
+}
+#page-student.theme-music::before { content: '♪'; position: fixed; font-size: 20px; color: rgba(200,80,200,.22); top: 10%; right: 8%; pointer-events: none; z-index: 0; animation: float 7s ease-in-out infinite; }
+#page-student.theme-music::after  { content: '♫'; position: fixed; font-size: 15px; color: rgba(150,50,255,.2); top: 55%; left: 5%; pointer-events: none; z-index: 0; animation: float 9s ease-in-out infinite reverse; }
+#page-student.theme-music .container { position: relative; z-index: 1; }
+#page-student.theme-music .card { background: rgba(255,255,255,.97); border: 1px solid rgba(200,80,200,.11); box-shadow: 0 8px 32px rgba(200,80,200,.07), 0 2px 8px rgba(0,0,0,.04); }
+#page-student.theme-music .qstud { background: rgba(255,255,255,.96); border: 1px solid rgba(200,80,200,.09); box-shadow: 0 2px 12px rgba(200,80,200,.05); }
+#page-student.theme-music .qnum2  { color: #be185d; }
+#page-student.theme-music .qtext  { color: #1e1e2e; }
+#page-student.theme-music .obtn   { background: rgba(255,255,255,.92); border: 1.5px solid rgba(200,80,200,.18); color: #1e1e2e; }
+#page-student.theme-music .obtn:hover { background: rgba(255,100,200,.06); border-color: rgba(200,80,200,.38); }
+#page-student.theme-music .obtn.sel { background: rgba(255,100,200,.08); border-color: #db2777; color: #9d174d; }
+#page-student.theme-music .obtn.ok  { border-color: #059669; background: rgba(5,150,105,.06); color: #065f46; }
+#page-student.theme-music .obtn.bad { border-color: #dc2626; background: rgba(220,38,38,.06); color: #7f1d1d; }
+#page-student.theme-music .oletter  { border-color: rgba(200,80,200,.28); color: #db2777; background: rgba(255,100,200,.06); }
+#page-student.theme-music .obtn.sel .oletter { background: #db2777; border-color: #db2777; color: #fff; }
+#page-student.theme-music textarea { background: rgba(255,255,255,.86); border-color: rgba(200,80,200,.19); color: #1e1e2e; }
+#page-student.theme-music .gapwrap { color: #1e1e2e; }
+#page-student.theme-music input.gapinp { border-bottom-color: rgba(200,80,200,.45); color: #db2777; }
+#page-student.theme-music #tbadge.bblue { background: rgba(255,100,200,.08) !important; color: #9d174d !important; border: 1px solid rgba(200,80,200,.2) !important; }
+#page-student.theme-music #ttitle { color: #1e1e2e; }
+#page-student.theme-music #tsub  { color: #9d174d; }
+#page-student.theme-music .divider { border-color: rgba(200,80,200,.14); }
+#page-student.theme-music .instr-box { background: rgba(255,100,200,.06); border-color: rgba(200,80,200,.18); color: #9d174d; }
+#page-student.theme-music .instr-box strong { color: #db2777; }
+#page-student.theme-music .stud-att { background: rgba(255,255,255,.72); border-color: rgba(200,80,200,.11); }
+#page-student.theme-music .btn-themed { background: linear-gradient(135deg, #db2777 0%, #9333ea 100%) !important; border: none !important; color: #fff !important; box-shadow: 0 4px 26px rgba(219,39,119,.32), inset 0 1px 0 rgba(255,255,255,.14) !important; }
+</style>
+</head>
+<body>
+
+<div class="topbar" id="topbar">
+  <div class="logo"><div class="logo-dot"></div>jumpED</div>
+  <div id="tbr" style="display:flex;gap:12px"></div>
+</div>
+
+<div class="overlay hidden" id="overlay"><div class="spin bspin"></div><p id="ovmsg">Загружаю...</p></div>
+
+<div id="page-student">
+<div class="container" style="max-width:700px">
+
+  <!-- Ошибка: задание не найдено или нет ID в URL -->
+  <div class="card hidden" id="st-error" style="text-align:center;padding:48px 24px">
+    <div class="stitle" style="margin-bottom:12px;font-size:22px">Задание не найдено</div>
+    <div class="ssub" style="margin-bottom:0">Проверьте ссылку или попросите учителя отправить её снова.</div>
+  </div>
+
+  <!-- Имя ученика -->
+  <div class="card hidden" id="st-name" style="text-align:center;padding:32px 24px">
+    <div class="ctitle" id="snlabel" style="font-size:14px;color:var(--accent);margin-bottom:24px">Задание</div>
+    <div class="field" style="max-width:320px;margin:0 auto 24px auto;text-align:left">
+      <label>Как вас зовут?</label>
+      <input type="text" id="sname" placeholder="Имя и фамилия">
+    </div>
+    <button class="btn bprimary" style="padding:12px 32px;font-size:16px" onclick="startTask()">Начать выполнение</button>
+  </div>
+
+  <!-- Тело задания -->
+  <div class="hidden" id="st-body">
+    <div class="card" style="padding:32px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:20px">
+        <div>
+          <div style="font-size:20px;font-weight:700;letter-spacing:-0.01em;color:var(--ink)" id="ttitle"></div>
+          <div style="font-size:14px;color:var(--ink2);margin-top:6px" id="tsub"></div>
+        </div>
+        <span class="badge bblue" id="tbadge" style="padding:6px 14px;font-size:13px">В процессе</span>
+      </div>
+      <div id="stud-att" class="hidden stud-att"></div>
+      <div id="qarea"></div>
+      <div class="divider"></div>
+      <div class="row" id="crow"><button class="btn bprimary" style="padding:14px 32px;font-size:16px;width:100%;justify-content:center" onclick="checkAnswers()">Завершить и проверить</button></div>
+      <div class="hidden" id="rblock" style="margin-top:24px"></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const _apiParam = new URLSearchParams(location.search).get('api');
+const API = _apiParam === '2' ? 'https://jumped.aiaistudio.org'
+          : _apiParam ? _apiParam.replace(/\/$/, '')
+          : 'https://jumped.aiaistudio.org';
+
+let studTask = null;
+let studTaskId = null;
+let studTaskMedia = { img: null, aud: null };
+let studAns = {};
+
+function showOv(m) { document.getElementById('ovmsg').textContent = m; document.getElementById('overlay').classList.remove('hidden'); }
+function hideOv() { document.getElementById('overlay').classList.add('hidden'); }
+
+function getTaskIdFromUrl() {
+  const p = new URLSearchParams(location.search).get('task');
+  if (p) return p.trim();
+  if (location.hash.startsWith('#task/')) return location.hash.replace('#task/', '').trim();
+  return null;
+}
+
+async function loadTask(taskId) {
+  showOv('Загружаю задание...');
+  try {
+    const res = await fetch(`${API}/static/tasks/${taskId}.json`);
+    if (!res.ok) throw new Error('not found');
+    const data = await res.json();
+
+    const rawSchema = data.schema_json ?? data;
+    studTask = typeof rawSchema === 'string' ? JSON.parse(rawSchema) : rawSchema;
+    studTaskMedia = { img: data.image_url || null, aud: data.audio_url || null };
+    studTaskId = taskId;
+
+    document.getElementById('snlabel').textContent = studTask.name || 'Задание';
+    document.getElementById('st-name').classList.remove('hidden');
+    document.getElementById('sname').focus();
+  } catch(e) {
+    document.getElementById('st-error').classList.remove('hidden');
+  } finally {
+    hideOv();
+  }
+}
+
+function startTask() {
+  const name = document.getElementById('sname').value.trim();
+  if (!name) { alert('Пожалуйста, введите своё имя'); return; }
+  document.getElementById('st-name').classList.add('hidden');
+  renderStudTask(studTask, name);
+}
+
+function renderStudTask(task, sname) {
+  const pg = document.getElementById('page-student');
+  pg.className = pg.className.replace(/\btheme-\S+/g, '').trim();
+  const topbar = document.getElementById('topbar');
+  topbar.className = topbar.className.replace(/\btheme-tb-\S+/g, '').trim();
+  const themeStyle = task.style || 'default';
+  if (themeStyle !== 'default') {
+    pg.classList.add('theme-' + themeStyle);
+    topbar.classList.add('theme-tb-' + themeStyle);
+  }
+
+  document.getElementById('ttitle').textContent = task.name;
+  document.getElementById('tsub').textContent = (task.questions?.length || 0) + ' вопросов · Выполняет: ' + sname;
+  document.getElementById('tbadge').textContent = 'В процессе';
+  document.getElementById('tbadge').className = 'badge bblue';
+  document.getElementById('rblock').classList.add('hidden');
+  document.getElementById('crow').classList.remove('hidden');
+  document.getElementById('st-body').classList.remove('hidden');
+  studAns = {};
+  const area = document.getElementById('qarea'); area.innerHTML = '';
+
+  const submitBtn = document.querySelector('#crow button');
+  if (submitBtn) {
+    submitBtn.classList.remove('btn-themed');
+    const themeTexts = {
+      space:  '🚀 Завершить и проверить',
+      magic:  '✨ Завершить и проверить 🪄',
+      gaming: 'ЗАВЕРШИТЬ И ПРОВЕРИТЬ →',
+      music:  '✦ Завершить и проверить 💜',
+    };
+    if (themeTexts[themeStyle]) {
+      submitBtn.textContent = themeTexts[themeStyle];
+      submitBtn.classList.add('btn-themed');
+    } else {
+      submitBtn.textContent = 'Завершить и проверить';
+    }
+  }
+
+  const attDiv = document.getElementById('stud-att');
+  let attHtml = '';
+  if (studTaskMedia.img) attHtml += `<img src="${API}${studTaskMedia.img}" alt="" style="max-width:100%;border-radius:8px;border:1px solid var(--border)">`;
+  if (studTaskMedia.aud) attHtml += `<audio controls style="width:100%" src="${API}${studTaskMedia.aud}"></audio>`;
+  attDiv.innerHTML = attHtml;
+  attDiv.classList.toggle('hidden', !attHtml);
+
+  const qareaParent = document.getElementById('qarea');
+  const existingInstr = document.getElementById('stud-instr');
+  if (existingInstr) existingInstr.remove();
+  if (task.instruction) {
+    const instrDiv = document.createElement('div');
+    instrDiv.id = 'stud-instr';
+    instrDiv.className = 'instr-box';
+    instrDiv.innerHTML = `<strong>📋 Инструкция</strong>${eh(task.instruction)}`;
+    qareaParent.parentNode.insertBefore(instrDiv, qareaParent);
+  }
+
+  const existingGP = document.getElementById('gaming-progress');
+  if (existingGP) existingGP.remove();
+  const total = (task.questions || []).length;
+  const gpDiv = document.createElement('div');
+  gpDiv.id = 'gaming-progress'; gpDiv.className = 'gaming-progress';
+  gpDiv.innerHTML = `<div class="gp-header"><span class="gp-label">🎮 Уровень 1</span><span class="gp-count" id="gp-count">0 / ${total}</span></div><div class="gp-track"><div class="gp-fill" id="gp-fill"></div></div>`;
+  qareaParent.parentNode.insertBefore(gpDiv, qareaParent);
+
+  const themeIcons = {
+    space:  ['🪐','⭐','🌌','🚀','🌟','💫','🛸','☄️'],
+    magic:  ['🧪','🌿','🔮','⭐','📜','🌙','🪄','✦'],
+    gaming: ['🍿','🎯','🕹️','⭐','🏆','🎲','🎪','🌟'],
+    music:  ['💜','🎵','🎤','⭐','🎼','🎶','🎸','🎹'],
+  };
+
+  (task.questions || []).forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'qstud'; div.dataset.qid = q.id;
+    const icon = themeIcons[themeStyle] ? (themeIcons[themeStyle][qi % themeIcons[themeStyle].length] + ' ') : '';
+    const qLabel = `${icon}Вопрос ${q.id}`;
+
+    if (task.type === 'multiple_choice') {
+      div.innerHTML = `<div class="qnum2">${qLabel}</div><div class="qtext">${q.text}</div><div class="opts">${(q.options || []).map((o, i) => {
+        const L = ['A', 'B', 'C', 'D', 'E', 'F'];
+        return `<button class="obtn" data-qid="${q.id}" data-val="${escH(o)}" onclick="selOpt(this,${q.id},'${escQ(o)}');updateGamingProgress()"><span class="oletter">${L[i] || i + 1}</span>${escH(o)}</button>`;
+      }).join('')}</div>`;
+    } else if (task.type === 'fill_gaps') {
+      let gi = 0;
+      const h = q.text.replace(/___/g, () => {
+        const id = `g_${q.id}_${gi++}`;
+        return `<input class="gapinp" id="${id}" data-qid="${q.id}" data-gi="${gi - 1}" placeholder="…" autocomplete="off" oninput="recGap(${q.id},this);updateGamingProgress()">`;
+      });
+      div.innerHTML = `<div class="qnum2">${qLabel}</div><div class="qtext gapwrap">${h}</div>`;
+    }
+    area.appendChild(div);
+  });
+}
+
+function escH(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function escQ(s) { return String(s).replace(/'/g, "\\'"); }
+function eh(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+function selOpt(btn, qid, val) {
+  if (studTask && studTask.type === 'multiple_choice') {
+    if (!Array.isArray(studAns[qid])) studAns[qid] = [];
+    if (btn.classList.contains('sel')) {
+      btn.classList.remove('sel');
+      studAns[qid] = studAns[qid].filter(v => v !== val);
+    } else {
+      btn.classList.add('sel');
+      studAns[qid] = [...studAns[qid], val];
+    }
+  } else {
+    document.querySelectorAll('[data-qid="' + qid + '"]').forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+    studAns[qid] = val;
+  }
+}
+
+function recGap(qid, inp) {
+  if (!studAns[qid] || typeof studAns[qid] !== 'object' || Array.isArray(studAns[qid])) studAns[qid] = {};
+  studAns[qid][inp.dataset.gi] = inp.value.trim();
+}
+
+function updateGamingProgress() {
+  const fill = document.getElementById('gp-fill');
+  const count = document.getElementById('gp-count');
+  if (!fill || !studTask) return;
+  const qs = studTask.questions || [];
+  const answered = qs.filter(q => {
+    const a = studAns[q.id];
+    if (a === undefined || a === null) return false;
+    if (Array.isArray(a)) return a.length > 0;
+    if (typeof a === 'object') return Object.values(a).some(v => v && v.toString().trim());
+    return a.toString().trim() !== '';
+  }).length;
+  const pct = qs.length ? Math.round((answered / qs.length) * 100) : 0;
+  fill.style.width = pct + '%';
+  if (count) count.textContent = answered + ' / ' + qs.length;
+}
+
+function normAns(s) { return String(s).toLowerCase().replace(/\s+/g, ' ').trim(); }
+function matchVariants(userVal, correctStr) {
+  return correctStr.split('|').map(v => normAns(v)).some(v => v === normAns(userVal));
+}
+
+async function checkAnswers() {
+  const task = studTask; if (!task) return;
+  const sname = document.getElementById('tsub').textContent.split('Выполняет: ')[1] || 'Ученик';
+  let score = 0, total = (task.questions || []).length;
+
+  task.questions.forEach(q => {
+    const correct = (q.answer ?? '').toString().trim().toLowerCase();
+    const ans = studAns[q.id];
+    let ok = false;
+
+    if (task.type === 'fill_gaps') {
+      const gapCorrects = correct.split(',').map(s => s.trim());
+      const vals = Object.values(ans || {});
+      ok = vals.length > 0 && vals.every((v, i) => matchVariants(v, gapCorrects[i] || gapCorrects[0]));
+      document.querySelectorAll(`input[data-qid="${q.id}"]`).forEach((inp, i) => {
+        const ca = gapCorrects[i] || gapCorrects[0];
+        inp.classList.add(matchVariants(inp.value, ca) ? 'ok' : 'bad'); inp.disabled = true;
+      });
+    } else if (task.type === 'multiple_choice') {
+      const corrArr = correct.split(',').map(s => s.trim()).sort();
+      const ansArr = (Array.isArray(ans) ? ans : [ans || '']).map(v => v.toString().toLowerCase()).sort();
+      ok = JSON.stringify(corrArr) === JSON.stringify(ansArr);
+      document.querySelectorAll(`[data-qid="${q.id}"]`).forEach(b => {
+        b.disabled = true;
+        const bv = (b.dataset.val || '').toLowerCase();
+        if (corrArr.includes(bv)) b.classList.add('ok');
+        else if (ansArr.includes(bv)) b.classList.add('bad');
+        b.classList.remove('sel');
+      });
+    } else {
+      ok = !!(ans || '').toString().trim();
+    }
+
+    if (ok) score++;
+    const card = document.querySelector(`.qstud[data-qid="${q.id}"]`);
+    if (card) card.style.borderColor = ok ? 'var(--green)' : 'var(--red)';
+  });
+
+  const pct = Math.round((score / total) * 100);
+  const col = pct >= 70 ? 'var(--green)' : pct >= 40 ? 'var(--amber)' : 'var(--red)';
+  const msg = pct === 100 ? 'Отлично! Всё правильно! 🎉' : pct >= 70 ? 'Хорошая работа! 👍' : pct >= 40 ? 'Неплохо, но есть ошибки' : 'Нужно повторить тему 📚';
+
+  document.getElementById('rblock').innerHTML = `<div style="padding:24px;background:#f8fafc;border-radius:var(--rs);border:1px solid var(--border);text-align:center"><div style="font-size:20px;font-weight:700;color:${col};margin-bottom:8px">${msg}</div><div style="font-size:16px;color:var(--ink2);margin-bottom:16px">Вы набрали <b>${score} из ${total}</b> баллов (${pct}%)</div><div class="rbar" style="max-width:300px;margin:0 auto;height:12px"><div class="rfill" style="width:${pct}%;background:${col}"></div></div></div>`;
+  document.getElementById('rblock').classList.remove('hidden');
+  document.getElementById('crow').classList.add('hidden');
+  document.getElementById('tbadge').textContent = 'Сдано';
+  document.getElementById('tbadge').className = 'badge bgreen2';
+
+  const payload = {};
+  task.questions.forEach(q => { payload[q.id] = studAns[q.id] !== undefined ? studAns[q.id] : null; });
+
+  try {
+    await fetch(`${API}/api/v1/tasks/${studTaskId}/answers`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_name: sname, payload_json: payload })
+    });
+  } catch(e) { /* не критично */ }
+}
+
+window.addEventListener('load', () => {
+  const taskId = getTaskIdFromUrl();
+  if (taskId) {
+    loadTask(taskId);
+  } else {
+    document.getElementById('st-error').classList.remove('hidden');
+  }
+});
+
+document.getElementById('sname').addEventListener('keydown', e => {
+  if (e.key === 'Enter') startTask();
+});
+</script>
+</body>
+</html>
